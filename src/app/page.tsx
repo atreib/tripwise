@@ -1,5 +1,5 @@
-import { SignIn } from "./components/sign-in.client";
+import { SignInBtn } from "./components.client";
 
 export default function Home() {
-  return <SignIn />;
+  return <SignInBtn />;
 }
