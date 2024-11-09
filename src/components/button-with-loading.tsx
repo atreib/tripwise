@@ -6,15 +6,23 @@ import { Button, ButtonProps } from "./ui/button";
 
 type Props = React.PropsWithChildren<ButtonProps> & {
   fallback?: React.ReactNode;
+  disableLoading?: boolean;
 };
 
-export function ButtonWithLoading({ children, fallback, ...props }: Props) {
+export function ButtonWithLoading({
+  children,
+  fallback,
+  disableLoading = false,
+  ...props
+}: Props) {
   const [isLoading, setIsLoading] = React.useState(false);
 
   async function handleClick(ev: React.MouseEvent<HTMLButtonElement>) {
-    ev.preventDefault();
-    setIsLoading(true);
-    props.onClick?.(ev);
+    if (!disableLoading) setIsLoading(true);
+    await props.onClick?.(ev);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
   }
 
   const finallFallback = fallback ? (

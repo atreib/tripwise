@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { signInAction } from "./actions";
 import { Loader2Icon } from "lucide-react";
+import { appConstants } from "../constants";
 
 const loginFormSchema = z.object({
   email: z.string().email(),
@@ -53,7 +54,10 @@ export function LoginForm() {
         <p className="text-primary font-semibold">
           Magic link sent successfully!
         </p>
-        <p>Check your email to sign in to Tripwise.</p>
+        <p>Check your email to sign in to {appConstants.APP_NAME}.</p>
+        <p className="text-muted-foreground text-sm">
+          You can close this page now.
+        </p>
       </div>
     );
   }
@@ -66,12 +70,12 @@ export function LoginForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Your best email</FormLabel>
               <FormControl>
                 <Input placeholder="your@email.com" {...field} />
               </FormControl>
               <FormDescription>
-                Provide your best email to plan the best trips.
+                We will email you a link to sign in to {appConstants.APP_NAME}.
               </FormDescription>
               <FormMessage />
             </FormItem>
