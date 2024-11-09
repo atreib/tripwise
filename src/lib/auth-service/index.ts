@@ -9,14 +9,6 @@ const UNAUTHENTICATED_REDIRECT_PATH = "/";
 const AUTHENTICATED_REDIRECT_PATH = "/dashboard";
 
 async function sendMagicLink(email: string): Promise<void> {
-  let user = await getUserService().getUserByEmail(email);
-  if (!user) {
-    const name = email.split("@")[0];
-    user = await getUserService().createUser({
-      email,
-      name,
-    });
-  }
   const magicLinkToken = getMagicLinkUtil().generateMagicLinkToken({ email });
   const magicLinkUrl = `${MAGIC_LINK_CALLBACK_PATH}?token=${magicLinkToken}`;
   getMagicLinkUtil().sendMagicLinkEmail(email, magicLinkUrl);
@@ -25,8 +17,15 @@ async function sendMagicLink(email: string): Promise<void> {
 async function authenticateWithMagicLink(token: string): Promise<void> {
   const magicLink = getMagicLinkUtil().validateMagicLinkToken(token);
   if (!magicLink) return redirect(UNAUTHENTICATED_REDIRECT_PATH);
-  const user = await getUserService().getUserByEmail(magicLink.email);
-  if (!user) return redirect(UNAUTHENTICATED_REDIRECT_PATH);
+  const email = magicLink.email;
+  let user = await getUserService().getUserByEmail(email);
+  if (!user) {
+    const name = email.split("@")[0];
+    user = await getUserService().createUser({
+      email,
+      name,
+    });
+  }
   await cookieSessionUtils.createSession({
     userId: user.id,
   });
