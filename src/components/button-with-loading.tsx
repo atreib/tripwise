@@ -19,10 +19,7 @@ export function ButtonWithLoading({
 
   async function handleClick(ev: React.MouseEvent<HTMLButtonElement>) {
     if (!disableLoading) setIsLoading(true);
-    await props.onClick?.(ev);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+    props.onClick?.(ev);
   }
 
   const finallFallback = fallback ? (

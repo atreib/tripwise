@@ -1,6 +1,6 @@
 "use client";
 
-import { HomeIcon, Loader2Icon, LogOutIcon } from "lucide-react";
+import { HomeIcon, Loader2Icon, LogOutIcon, MapPinIcon } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -14,7 +14,6 @@ import {
 import { appConstants } from "../constants";
 import { ButtonWithLoading } from "@/components/button-with-loading";
 import { usePathname } from "next/navigation";
-import Link from "next/link";
 
 export type SidebarItem = {
   title: string;
@@ -29,9 +28,9 @@ const items: SidebarItem[] = [
     icon: HomeIcon,
   },
   {
-    title: "Test",
-    url: "/dashboard/test",
-    icon: HomeIcon,
+    title: "Trips",
+    url: "/dashboard/trips",
+    icon: MapPinIcon,
   },
 ];
 
@@ -59,10 +58,10 @@ function SidebarButton({ item }: { item: SidebarItem }) {
         </div>
       }
     >
-      <Link href={item.url}>
+      <a href={item.url}>
         <item.icon />
         <span>{item.title}</span>
-      </Link>
+      </a>
     </ButtonWithLoading>
   );
 }
