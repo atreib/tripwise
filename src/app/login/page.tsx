@@ -6,6 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { LoginForm } from "./components.client";
+import { appConstants } from "../constants";
 
 export default function SignIn() {
   return (
@@ -13,7 +14,7 @@ export default function SignIn() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-3xl font-bold text-center text-primary">
-            Tripwise
+            {appConstants.APP_NAME}
           </CardTitle>
           <CardDescription className="text-center">
             Sign in to plan your next adventure

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { appConstants } from "./constants";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -14,8 +15,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Tripwise",
-  description: "Plan your next trip with Tripwise",
+  title: appConstants.APP_NAME,
+  description: `Plan your next trip with ${appConstants.APP_NAME}`,
   authors: [{ name: "Andre Treib", url: "https://andretreib.com" }],
 };
 
