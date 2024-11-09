@@ -2,6 +2,9 @@ import "server-only";
 
 import jwt from "jsonwebtoken";
 import { MagicLinkClaims } from "../types";
+import { sendEmail } from "@/lib/email";
+import { MagicLinkTemplate } from "@/lib/email/templates/login-magic-link";
+import { appConstants } from "@/app/constants";
 
 const SECRET_KEY = process.env.MAGIC_LINK_SECRET_KEY! as string;
 
@@ -20,7 +23,12 @@ function validateMagicLinkToken(token: string): MagicLinkClaims | undefined {
 }
 
 function sendMagicLinkEmail(email: string, magicLinkUrl: string) {
-  console.log("Sending magic link email to", email, "with URL", magicLinkUrl);
+  const url = `${process.env.APP_URL}${magicLinkUrl}`;
+  return sendEmail({
+    to: email,
+    subject: `Your access to ${appConstants.APP_NAME}`,
+    content: <MagicLinkTemplate name={email} url={url} />,
+  });
 }
 
 export function getMagicLinkUtil() {
