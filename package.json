@@ -6,16 +6,22 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "migrate:latest": "kysely migrate latest",
+    "migrate:rollback": "kysely migrate up",
+    "migrate:make": "kysely migrate make"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.1.0",
+    "@types/pg": "^8.11.10",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "jsonwebtoken": "^9.0.2",
+    "kysely": "^0.27.4",
     "lucide-react": "^0.454.0",
     "next": "15.0.3-canary.7",
     "next-safe-action": "^7.9.9",
+    "pg": "^8.13.1",
     "react": "19.0.0-rc-7c8e5e7a-20241101",
     "react-dom": "19.0.0-rc-7c8e5e7a-20241101",
     "server-only": "^0.0.1",
@@ -30,6 +36,7 @@
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "15.0.3-canary.7",
+    "kysely-ctl": "^0.9.0",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
