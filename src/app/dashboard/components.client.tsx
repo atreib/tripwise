@@ -26,7 +26,7 @@ export function Breadcrumb() {
               {isLast ? (
                 <span className="ml-2 font-medium capitalize">{path}</span>
               ) : (
-                <Link href={href} className="ml-2 capitalize underline">
+                <Link href={href} className="ml-2 capitalize hover:underline">
                   {path}
                 </Link>
               )}

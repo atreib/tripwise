@@ -3,11 +3,11 @@ import { ColumnType } from "kysely";
 export interface Database {
   user: UserTable;
   trip: TripTable;
-  tripPackingList: TripPackingListTable;
-  tripDocuments: TripDocumentsTable;
-  tripLocalEtiquette: TripLocalEtiquetteTable;
-  tripLocalFood: TripLocalFoodTable;
-  tripPointsOfInterest: TripPointsOfInterestTable;
+  trip_packing_list: TripPackingListTable;
+  trip_documents: TripDocumentsTable;
+  trip_local_etiquette: TripLocalEtiquetteTable;
+  trip_local_food: TripLocalFoodTable;
+  trip_points_of_interest: TripPointsOfInterestTable;
 }
 
 export interface UserTable {
