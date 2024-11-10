@@ -1,7 +1,16 @@
 import "server-only";
 
 import { db } from "@/lib/db";
-import { Trip, tripSchema } from "./types";
+import {
+  Trip,
+  tripDocumentsSchema,
+  tripGeneratedSchema,
+  tripLocalEtiquetteSchema,
+  tripLocalFoodSchema,
+  tripPackingListSchema,
+  tripPointsOfInterestSchema,
+  tripSchema,
+} from "./types";
 import { v4 } from "uuid";
 import { generateTripSummary } from "./prompts/generate-trip-summary";
 import { generateTripCurrency } from "./prompts/generate-trip-currency";
@@ -136,12 +145,62 @@ async function getTripById(props: { tripId: string }) {
     .where("id", "=", props.tripId)
     .executeTakeFirst();
   if (!trip) return undefined;
-  return tripSchema.parse(trip);
+  return tripSchema.merge(tripGeneratedSchema.partial()).parse(trip);
+}
+
+async function getTripPackingList(props: { tripId: string }) {
+  const packingList = await db
+    .selectFrom("trip_packing_list")
+    .selectAll()
+    .where("tripId", "=", props.tripId)
+    .execute();
+  return tripPackingListSchema.array().parse(packingList);
+}
+
+async function getTripRequiredDocuments(props: { tripId: string }) {
+  const requiredDocuments = await db
+    .selectFrom("trip_documents")
+    .selectAll()
+    .where("tripId", "=", props.tripId)
+    .execute();
+  return tripDocumentsSchema.array().parse(requiredDocuments);
+}
+
+async function getTripLocalEtiquettes(props: { tripId: string }) {
+  const localEtiquettes = await db
+    .selectFrom("trip_local_etiquette")
+    .selectAll()
+    .where("tripId", "=", props.tripId)
+    .execute();
+  return tripLocalEtiquetteSchema.array().parse(localEtiquettes);
+}
+
+async function getTripLocalFood(props: { tripId: string }) {
+  const localFood = await db
+    .selectFrom("trip_local_food")
+    .selectAll()
+    .where("tripId", "=", props.tripId)
+    .execute();
+  return tripLocalFoodSchema.array().parse(localFood);
+}
+
+async function getTripPointsOfInterest(props: { tripId: string }) {
+  const pointsOfInterest = await db
+    .selectFrom("trip_points_of_interest")
+    .selectAll()
+    .where("tripId", "=", props.tripId)
+    .execute();
+  return tripPointsOfInterestSchema.array().parse(pointsOfInterest);
 }
 
 export function getTripsService() {
   return {
     createTrip,
     getTripById,
+    getTripPackingList,
+    getTripRequiredDocuments,
+    getTripLocalEtiquettes,
+    getTripLocalFood,
+    getTripPointsOfInterest,
   };
 }
