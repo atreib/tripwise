@@ -14,7 +14,7 @@ export async function createSession(session: Session) {
     httpOnly: true,
     secure: true,
     expires: expiresAt,
-    sameSite: "strict",
+    sameSite: "lax",
     path: "/",
   });
 }
