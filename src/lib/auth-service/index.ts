@@ -6,7 +6,6 @@ import { User } from "../user-service/types";
 
 const MAGIC_LINK_CALLBACK_PATH = "/api/auth/callback";
 const UNAUTHENTICATED_REDIRECT_PATH = "/";
-const AUTHENTICATED_REDIRECT_PATH = "/dashboard";
 
 async function sendMagicLink(email: string): Promise<void> {
   const magicLinkToken = getMagicLinkUtil().generateMagicLinkToken({ email });
@@ -29,7 +28,6 @@ async function authenticateWithMagicLink(token: string): Promise<void> {
   await cookieSessionUtils.createSession({
     userId: user.id,
   });
-  redirect(AUTHENTICATED_REDIRECT_PATH);
 }
 
 async function getAuthSession(): Promise<User | undefined> {

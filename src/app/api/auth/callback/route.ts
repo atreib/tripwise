@@ -1,3 +1,4 @@
+import { appConstants } from "@/app/constants";
 import { getAuthService } from "@/lib/auth-service";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -7,5 +8,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Token is required" }, { status: 400 });
   }
 
-  return getAuthService().authenticateWithMagicLink(token);
+  await getAuthService().authenticateWithMagicLink(token);
+  return NextResponse.redirect(
+    new URL(appConstants.AUTHENTICATED_REDIRECT_PATH, request.url)
+  );
 }

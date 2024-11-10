@@ -72,7 +72,7 @@ export function LoginForm() {
             <FormItem>
               <FormLabel>Your best email</FormLabel>
               <FormControl>
-                <Input placeholder="your@email.com" {...field} />
+                <Input type="email" placeholder="your@email.com" {...field} />
               </FormControl>
               <FormDescription>
                 We will email you a link to sign in to {appConstants.APP_NAME}.
