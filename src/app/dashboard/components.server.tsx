@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,9 +23,23 @@ export async function Navbar() {
         <div className="flex justify-between h-16">
           <div className="flex-shrink-0 flex items-center">
             <SidebarTrigger className="mr-4 h-8 w-8" />
-            <h1 className="text-2xl font-bold text-primary">
-              {appConstants.APP_NAME}
-            </h1>
+            <div>
+              <span className="sr-only">{appConstants.APP_NAME}</span>
+              <Image
+                src="/icons/logo-no-background.svg"
+                alt="Tripwise"
+                width={100}
+                height={100}
+                className="hidden lg:inline-block overflow-hidden object-cover object-center"
+              />
+              <Image
+                src="/icons/logo-only.png"
+                alt="Tripwise"
+                width={30}
+                height={30}
+                className="inline-block lg:hidden overflow-hidden object-cover object-center"
+              />
+            </div>
           </div>
           <div className="ml-6 flex items-center">
             <DropdownMenu>

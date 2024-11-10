@@ -7,14 +7,22 @@ import {
 } from "@/components/ui/card";
 import { LoginForm } from "./components.client";
 import { appConstants } from "../constants";
+import Image from "next/image";
 
 export default function SignIn() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-primary p-4">
       <Card className="w-full max-w-md">
-        <CardHeader>
+        <CardHeader className="gap-4">
           <CardTitle className="text-3xl font-bold text-center text-primary">
-            {appConstants.APP_NAME}
+            <span className="sr-only">{appConstants.APP_NAME}</span>
+            <Image
+              src="/icons/logo-no-background.svg"
+              alt={appConstants.APP_NAME}
+              width={300}
+              height={300}
+              className="overflow-hidden object-cover object-center mx-auto w-[70%]"
+            />
           </CardTitle>
           <CardDescription className="text-center">
             Sign in to plan your next adventure
