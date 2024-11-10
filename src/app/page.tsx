@@ -3,8 +3,16 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { appConstants } from "./constants";
+import { getAuthService } from "@/lib/auth-service";
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const user = await getAuthService().getAuthSession();
+
+  const ctaUrl = user
+    ? appConstants.AUTHENTICATED_REDIRECT_PATH
+    : appConstants.LOGIN_PATH;
+  const ctaText = user ? "Dashboard" : "Get Started";
+
   return (
     <div className="flex flex-col min-h-[100dvh]">
       <header className="px-4 lg:px-6 h-14 flex items-center">
@@ -32,7 +40,7 @@ export default function LandingPage() {
             <Link href="/#testimonials">Testimonials</Link>
           </Button>
           <Button asChild>
-            <Link href={appConstants.LOGIN_PATH}>Get Started</Link>
+            <Link href={ctaUrl}>{ctaText}</Link>
           </Button>
         </nav>
       </header>
@@ -56,7 +64,7 @@ export default function LandingPage() {
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
                   <Button asChild>
-                    <Link href={appConstants.LOGIN_PATH}>Get Started</Link>
+                    <Link href={ctaUrl}>{ctaText}</Link>
                   </Button>
                 </div>
               </div>
@@ -231,7 +239,7 @@ export default function LandingPage() {
             <div className="mx-auto w-full max-w-sm space-y-2">
               <form className="flex py-2 mx-auto justify-center items-center">
                 <Button variant="secondary" asChild>
-                  <Link href={appConstants.LOGIN_PATH}>Get Started</Link>
+                  <Link href={ctaUrl}>{ctaText}</Link>
                 </Button>
               </form>
               <p className="text-xs">

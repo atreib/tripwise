@@ -25,9 +25,9 @@ export function ButtonWithLoading({
   const finallFallback = fallback ? (
     fallback
   ) : (
-    <>
+    <div>
       <Loader2Icon className="h-4 w-4 animate-spin" /> {children}
-    </>
+    </div>
   );
 
   return (

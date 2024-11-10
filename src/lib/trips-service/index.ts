@@ -193,6 +193,19 @@ async function getTripPointsOfInterest(props: { tripId: string }) {
   return tripPointsOfInterestSchema.array().parse(pointsOfInterest);
 }
 
+async function getTripsByUserId(props: { userId: string }) {
+  const trips = await db
+    .selectFrom("trip")
+    .selectAll()
+    .where("userId", "=", props.userId)
+    .execute();
+  return tripSchema.array().parse(trips);
+}
+
+async function deleteTrip(props: { tripId: string }) {
+  await db.deleteFrom("trip").where("id", "=", props.tripId).execute();
+}
+
 export function getTripsService() {
   return {
     createTrip,
@@ -202,5 +215,7 @@ export function getTripsService() {
     getTripLocalEtiquettes,
     getTripLocalFood,
     getTripPointsOfInterest,
+    getTripsByUserId,
+    deleteTrip,
   };
 }
