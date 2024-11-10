@@ -10,7 +10,7 @@ const UNAUTHENTICATED_REDIRECT_PATH = "/";
 async function sendMagicLink(email: string): Promise<void> {
   const magicLinkToken = getMagicLinkUtil().generateMagicLinkToken({ email });
   const magicLinkUrl = `${MAGIC_LINK_CALLBACK_PATH}?token=${magicLinkToken}`;
-  getMagicLinkUtil().sendMagicLinkEmail(email, magicLinkUrl);
+  await getMagicLinkUtil().sendMagicLinkEmail(email, magicLinkUrl);
 }
 
 async function authenticateWithMagicLink(token: string): Promise<void> {

@@ -23,12 +23,17 @@ function validateMagicLinkToken(token: string): MagicLinkClaims | undefined {
 }
 
 function sendMagicLinkEmail(email: string, magicLinkUrl: string) {
-  const url = `${process.env.APP_URL}${magicLinkUrl}`;
-  return sendEmail({
-    to: email,
-    subject: `Your access to ${appConstants.APP_NAME}`,
-    content: <MagicLinkTemplate name={email} url={url} />,
-  });
+  try {
+    const url = `${process.env.APP_URL}${magicLinkUrl}`;
+    return sendEmail({
+      to: email,
+      subject: `Your access to ${appConstants.APP_NAME}`,
+      content: <MagicLinkTemplate name={email} url={url} />,
+    });
+  } catch (err) {
+    console.error(`Could not send magic link email to ${email} because: `, err);
+    throw err;
+  }
 }
 
 export function getMagicLinkUtil() {

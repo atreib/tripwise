@@ -15,7 +15,13 @@ async function sendEmail(props: {
     subject: props.subject,
     react: props.content,
   });
-  if (error) throw new Error(error.message);
+  if (error) {
+    console.error(
+      `Could not send email ${props.subject}"" to ${props.to} because: `,
+      error
+    );
+    throw new Error(error.message);
+  }
   return data;
 }
 
