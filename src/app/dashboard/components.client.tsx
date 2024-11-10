@@ -9,10 +9,12 @@ export function Breadcrumb() {
   const paths = pathname.split("/").filter(Boolean);
 
   return (
-    <nav aria-label="Breadcrumb" className="mb-4">
+    <nav aria-label="Breadcrumb" className="mb-4 text-muted-foreground">
       <ol className="flex items-center space-x-2">
         <li>
-          <Link href="/dashboard">Home</Link>
+          <Link href="/dashboard" className="hover:underline">
+            Home
+          </Link>
         </li>
         {paths.slice(1).map((path, index) => {
           const href = `/dashboard/${paths.slice(1, index + 2).join("/")}`;
@@ -24,7 +26,7 @@ export function Breadcrumb() {
               {isLast ? (
                 <span className="ml-2 font-medium capitalize">{path}</span>
               ) : (
-                <Link href={href} className="ml-2 capitalize">
+                <Link href={href} className="ml-2 capitalize underline">
                   {path}
                 </Link>
               )}
