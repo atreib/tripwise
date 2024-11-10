@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+![](./public/icons/logo-no-background.png)
+
+# Tripwise
+
+Tripwise is a cutting-edge travel planning application designed to simplify your travel experience. Utilizing advanced AI algorithms, it provides personalized recommendations, budget planning, and seamless itinerary generation, making your travel effortless and enjoyable.
 
 ## Getting Started
 
-First, run the development server:
+To get started with Tripwise, follow these steps:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. **Install Dependencies**: First, you need to install the necessary dependencies. Run the following command in your terminal:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+   ```bash
+   npm install
+   ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+   This command will install all the packages listed in the `package.json` file, including essential libraries such as:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   - **Next.js**: A React framework for building server-side rendered applications.
+   - **Next-safe-actions**: A library for handling safe server actions in Next.js applications.
+   - **Kysely**: A type-safe SQL query builder for TypeScript, used to interact with our single PostgreSQL database.
+   - **OpenAI**: For integrating AI capabilities into the application.
+   - **Tailwind CSS**: A utility-first CSS framework for styling.
 
-## Learn More
+2. **Set Up Environment Variables**: Create a `.env` file in the root of your project and populate it with the necessary environment variables. You can use the provided `.env.sample` as a reference. You'll have to create an account in some third part libs (as OpenAI and Resend), but they all have free-tiers for local development. Also, you'll need a Postgres client running.
 
-To learn more about Next.js, take a look at the following resources:
+3. **Run the Development Server**: After installing the dependencies and setting up the environment variables, you can start the development server with:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```bash
+   npm run dev
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   Open [http://localhost:3000](http://localhost:3000) in your browser to see the application in action. The application leverages React Server Components (RSC) and server actions from Next.js 15 to enhance performance and user experience.
