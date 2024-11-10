@@ -32,7 +32,7 @@ export default function LandingPage() {
             <Link href="/#testimonials">Testimonials</Link>
           </Button>
           <Button asChild>
-            <Link href="/login">Get Started</Link>
+            <Link href={appConstants.LOGIN_PATH}>Get Started</Link>
           </Button>
         </nav>
       </header>
@@ -56,7 +56,7 @@ export default function LandingPage() {
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
                   <Button asChild>
-                    <Link href="/dashboard">Get Started</Link>
+                    <Link href={appConstants.LOGIN_PATH}>Get Started</Link>
                   </Button>
                 </div>
               </div>
@@ -231,7 +231,7 @@ export default function LandingPage() {
             <div className="mx-auto w-full max-w-sm space-y-2">
               <form className="flex py-2 mx-auto justify-center items-center">
                 <Button variant="secondary" asChild>
-                  <Link href="/login">Get Started</Link>
+                  <Link href={appConstants.LOGIN_PATH}>Get Started</Link>
                 </Button>
               </form>
               <p className="text-xs">
