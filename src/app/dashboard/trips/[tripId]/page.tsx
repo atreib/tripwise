@@ -30,14 +30,14 @@ export default async function TripPage({ params, searchParams }: Props) {
   const trip = await getTripsService().getTripById({ tripId });
   if (!trip) return notFound();
   return (
-    <div className="flex flex-col gap-8">
-      <Card>
+    <div className="flex flex-col gap-8 w-full overflow-auto">
+      <Card className="w-full">
         <CardContent className="p-6">
           <div className="flex flex-col gap-4">
             <h1 className="text-3xl font-bold flex items-center">
               <MapPinIcon className="mr-2" /> {trip.destination}
             </h1>
-            <div className="flex items-center gap-4 text-lg text-muted-foreground">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:gap-4 text-lg text-muted-foreground">
               <p>{trip.season}</p>
               <p>a few {trip.duration}</p>
               <p>{trip.budget}</p>
@@ -47,13 +47,16 @@ export default async function TripPage({ params, searchParams }: Props) {
           </div>
         </CardContent>
       </Card>
+
       <TabsOnUrl defaultValue={tab ?? "packing"}>
-        <TabsList>
-          <TabsTrigger value="packing">Packing & Documents</TabsTrigger>
-          <TabsTrigger value="etiquettes">Local Etiquettes</TabsTrigger>
-          <TabsTrigger value="food">Local Food</TabsTrigger>
-          <TabsTrigger value="attractions">Attractions</TabsTrigger>
-        </TabsList>
+        <div className="w-full overflow-auto whitespace-nowrap">
+          <TabsList>
+            <TabsTrigger value="packing">Packing & Documents</TabsTrigger>
+            <TabsTrigger value="etiquettes">Local Etiquettes</TabsTrigger>
+            <TabsTrigger value="food">Local Food</TabsTrigger>
+            <TabsTrigger value="attractions">Attractions</TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent
           value="packing"

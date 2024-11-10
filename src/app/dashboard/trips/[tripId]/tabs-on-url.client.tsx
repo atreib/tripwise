@@ -30,7 +30,11 @@ export function TabsOnUrl({
   }
 
   return (
-    <Tabs onValueChange={handleTabChange} defaultValue={defaultValue}>
+    <Tabs
+      onValueChange={handleTabChange}
+      defaultValue={defaultValue}
+      className="w-full overflow-auto"
+    >
       {children}
     </Tabs>
   );
