@@ -8,11 +8,11 @@ import { redirect } from "next/navigation";
 
 export const createTripAction = authenticatedActionClient
   .schema(tripSchema.omit({ id: true, created_at: true, userId: true }))
-  .action(async ({ parsedInput, ctx: { user } }) => {
+  .action(async ({ parsedInput, ctx: { userId } }) => {
     const createdTrip = await getTripsService().createTrip({
       trip: {
         ...parsedInput,
-        userId: user.id,
+        userId,
       },
     });
     revalidatePath("/dashboard/trips");

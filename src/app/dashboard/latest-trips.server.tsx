@@ -10,9 +10,9 @@ import Link from "next/link";
 import { ButtonWithLoading } from "@/components/button-with-loading";
 
 export async function LatestTrips() {
-  const user = await getAuthService().requireAuthSession();
+  const userId = await getAuthService().requireAuthSession();
   const trips = await getTripsService().getLatestFewTripByUserId({
-    userId: user.id,
+    userId,
   });
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 w-full">

@@ -1,7 +1,9 @@
 "use client";
 
+// TODO: Analyze UX on adding tabs to the URL vs cost on compute time
+
 import * as React from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+// import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Tabs } from "@/components/ui/tabs";
 
 type Props = {
@@ -12,7 +14,7 @@ export function TabsOnUrl({
   children,
   defaultValue,
 }: React.PropsWithChildren<Props>) {
-  const router = useRouter();
+  /* const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
@@ -27,11 +29,11 @@ export function TabsOnUrl({
 
   function handleTabChange(tab: string) {
     router.push(pathname + "?" + createQueryString(tab), { scroll: false });
-  }
+  } */
 
   return (
     <Tabs
-      onValueChange={handleTabChange}
+      /* onValueChange={handleTabChange} */
       defaultValue={defaultValue}
       className="w-full overflow-auto"
     >

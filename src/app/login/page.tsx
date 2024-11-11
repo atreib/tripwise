@@ -7,7 +7,6 @@ import {
 } from "@/components/ui/card";
 import { LoginForm } from "./components.client";
 import { appConstants } from "../constants";
-import Image from "next/image";
 
 export default function SignIn() {
   return (
@@ -16,11 +15,9 @@ export default function SignIn() {
         <CardHeader className="gap-4">
           <CardTitle className="text-3xl font-bold text-center text-primary">
             <span className="sr-only">{appConstants.APP_NAME}</span>
-            <Image
+            <img
               src="/icons/logo-no-background.svg"
               alt={appConstants.APP_NAME}
-              width={300}
-              height={300}
               className="overflow-hidden object-cover object-center mx-auto w-[70%]"
             />
           </CardTitle>

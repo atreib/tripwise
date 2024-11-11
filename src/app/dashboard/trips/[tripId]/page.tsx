@@ -16,16 +16,24 @@ import { Attractions } from "./attractions.server";
 import { AttractionsSkeleton } from "./attractions-skeleton.server";
 import { TabsOnUrl } from "./tabs-on-url.client";
 
+// TODO: Revalidate ISR when we allow people to edit trips
+
+export const revalidate = 86400; // 24 hours
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  const trips = await getTripsService().getAllTrips();
+  return trips.map((trip) => ({
+    tripId: trip.id,
+  }));
+}
+
 type Props = {
   params: Promise<{ tripId: Trip["id"] }>;
-  searchParams: Promise<{
-    tab?: "packing" | "etiquettes" | "food" | "attractions";
-  }>;
 };
 
-export default async function TripPage({ params, searchParams }: Props) {
+export default async function TripPage({ params }: Props) {
   const { tripId } = await params;
-  const { tab } = await searchParams;
   await getAuthService().requireAuthSession();
   const trip = await getTripsService().getTripById({ tripId });
   if (!trip) return notFound();
@@ -48,7 +56,7 @@ export default async function TripPage({ params, searchParams }: Props) {
         </CardContent>
       </Card>
 
-      <TabsOnUrl defaultValue={tab ?? "packing"}>
+      <TabsOnUrl defaultValue="packing">
         <div className="w-full overflow-auto whitespace-nowrap">
           <TabsList>
             <TabsTrigger value="packing">Packing & Documents</TabsTrigger>

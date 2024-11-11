@@ -124,6 +124,7 @@ async function createTrip(props: { trip: Omit<Trip, "id" | "created_at"> }) {
     .returningAll()
     .executeTakeFirstOrThrow();
 
+  // TODO: Add queueing to decrease Vercel compute time on project creation
   await Promise.all([
     updateTripSummary({ trip: newTrip }),
     updateTripCurrency({ trip: newTrip }),
@@ -138,6 +139,7 @@ async function createTrip(props: { trip: Omit<Trip, "id" | "created_at"> }) {
   return tripSchema.parse(newTrip);
 }
 
+// TODO: Add caching + revalidation to decrease Vercel compute time
 async function getTripById(props: { tripId: string }) {
   const trip = await db
     .selectFrom("trip")
@@ -148,6 +150,7 @@ async function getTripById(props: { tripId: string }) {
   return tripSchema.merge(tripGeneratedSchema.partial()).parse(trip);
 }
 
+// TODO: Add caching + revalidation to decrease Vercel compute time
 async function getTripPackingList(props: { tripId: string }) {
   const packingList = await db
     .selectFrom("trip_packing_list")
@@ -157,6 +160,7 @@ async function getTripPackingList(props: { tripId: string }) {
   return tripPackingListSchema.array().parse(packingList);
 }
 
+// TODO: Add caching + revalidation to decrease Vercel compute time
 async function getTripRequiredDocuments(props: { tripId: string }) {
   const requiredDocuments = await db
     .selectFrom("trip_documents")
@@ -166,6 +170,7 @@ async function getTripRequiredDocuments(props: { tripId: string }) {
   return tripDocumentsSchema.array().parse(requiredDocuments);
 }
 
+// TODO: Add caching + revalidation to decrease Vercel compute time
 async function getTripLocalEtiquettes(props: { tripId: string }) {
   const localEtiquettes = await db
     .selectFrom("trip_local_etiquette")
@@ -175,6 +180,7 @@ async function getTripLocalEtiquettes(props: { tripId: string }) {
   return tripLocalEtiquetteSchema.array().parse(localEtiquettes);
 }
 
+// TODO: Add caching + revalidation to decrease Vercel compute time
 async function getTripLocalFood(props: { tripId: string }) {
   const localFood = await db
     .selectFrom("trip_local_food")
@@ -184,6 +190,7 @@ async function getTripLocalFood(props: { tripId: string }) {
   return tripLocalFoodSchema.array().parse(localFood);
 }
 
+// TODO: Add caching + revalidation to decrease Vercel compute time
 async function getTripPointsOfInterest(props: { tripId: string }) {
   const pointsOfInterest = await db
     .selectFrom("trip_points_of_interest")
@@ -193,6 +200,7 @@ async function getTripPointsOfInterest(props: { tripId: string }) {
   return tripPointsOfInterestSchema.array().parse(pointsOfInterest);
 }
 
+// TODO: Add caching + revalidation to decrease Vercel compute time
 async function getTripsByUserId(props: { userId: string }) {
   const trips = await db
     .selectFrom("trip")
@@ -206,6 +214,7 @@ async function deleteTrip(props: { tripId: string }) {
   await db.deleteFrom("trip").where("id", "=", props.tripId).execute();
 }
 
+// TODO: Add caching + revalidation to decrease Vercel compute time
 async function getLatestFewTripByUserId(props: { userId: string }) {
   const trips = await db
     .selectFrom("trip")
@@ -214,6 +223,11 @@ async function getLatestFewTripByUserId(props: { userId: string }) {
     .orderBy("created_at", "desc")
     .limit(3)
     .execute();
+  return tripSchema.array().parse(trips);
+}
+
+async function getAllTrips() {
+  const trips = await db.selectFrom("trip").selectAll().execute();
   return tripSchema.array().parse(trips);
 }
 
@@ -229,5 +243,6 @@ export function getTripsService() {
     getTripsByUserId,
     deleteTrip,
     getLatestFewTripByUserId,
+    getAllTrips,
   };
 }

@@ -30,15 +30,13 @@ async function authenticateWithMagicLink(token: string): Promise<void> {
   });
 }
 
-async function getAuthSession(): Promise<User | undefined> {
+async function getAuthSession(): Promise<User["id"] | undefined> {
   const session = await cookieSessionUtils.getSession();
   if (!session) return undefined;
-  const user = await getUserService().getUserById(session.userId);
-  if (!user) return undefined;
-  return user;
+  return session.userId;
 }
 
-async function requireAuthSession(): Promise<User> {
+async function requireAuthSession(): Promise<User["id"]> {
   const session = await getAuthSession();
   if (!session) return redirect(UNAUTHENTICATED_REDIRECT_PATH);
   return session;

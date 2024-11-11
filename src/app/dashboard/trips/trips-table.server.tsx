@@ -16,8 +16,8 @@ import { EyeIcon, Loader2Icon, TrashIcon } from "lucide-react";
 import { RemoveTripDialog } from "./remove-trip-dialog.client";
 
 export async function TripsTable() {
-  const user = await getAuthService().requireAuthSession();
-  const trips = await getTripsService().getTripsByUserId({ userId: user.id });
+  const userId = await getAuthService().requireAuthSession();
+  const trips = await getTripsService().getTripsByUserId({ userId });
 
   return (
     <Table>

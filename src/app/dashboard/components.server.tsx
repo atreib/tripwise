@@ -1,22 +1,10 @@
-import Link from "next/link";
-import Image from "next/image";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { getAuthService } from "@/lib/auth-service";
 import { appConstants } from "../constants";
+import { UserAvatar } from "./user-avatar.server";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Suspense } from "react";
 
 export async function Navbar() {
-  const user = await getAuthService().requireAuthSession();
-
   return (
     <nav className="bg-background border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -25,54 +13,22 @@ export async function Navbar() {
             <SidebarTrigger className="mr-4 h-8 w-8" />
             <div>
               <span className="sr-only">{appConstants.APP_NAME}</span>
-              <Image
+              <img
                 src="/icons/logo-no-background.svg"
                 alt="Tripwise"
-                width={100}
-                height={100}
-                className="hidden lg:inline-block overflow-hidden object-cover object-center"
+                className="hidden lg:inline-block h-8 w-auto"
               />
-              <Image
+              <img
                 src="/icons/logo-only.png"
                 alt="Tripwise"
-                width={30}
-                height={30}
-                className="inline-block lg:hidden overflow-hidden object-cover object-center"
+                className="inline-block lg:hidden h-8 w-auto"
               />
             </div>
           </div>
           <div className="ml-6 flex items-center">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="relative h-8 w-8 rounded-full"
-                >
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src="/avatars/01.png" alt={user.name} />
-                    <AvatarFallback>
-                      {user.name.slice(0, 2).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
-                <DropdownMenuLabel className="font-normal">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      Hello, {user.name} 👋
-                    </p>
-                    <p className="text-xs leading-none text-muted-foreground">
-                      {user.email}
-                    </p>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href={appConstants.LOGOUT_PATH}>Log out</Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Suspense fallback={<Skeleton className="h-8 w-8 rounded-full" />}>
+              <UserAvatar />
+            </Suspense>
           </div>
         </div>
       </div>

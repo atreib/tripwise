@@ -24,6 +24,12 @@ async function getUserById(id: string): Promise<User | undefined> {
   return userSchema.parse(user);
 }
 
+async function getUserByIdOrThrow(id: string): Promise<User> {
+  const user = await getUserById(id);
+  if (!user) throw new Error("User not found");
+  return user;
+}
+
 async function createUser(user: Omit<User, "id">): Promise<User> {
   const newUser = await db
     .insertInto("user")
@@ -38,6 +44,7 @@ async function createUser(user: Omit<User, "id">): Promise<User> {
 
 export function getUserService() {
   return {
+    getUserByIdOrThrow,
     getUserByEmail,
     getUserById,
     createUser,

@@ -3,6 +3,8 @@ import { Breadcrumb } from "./components.client";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "./sidebar";
 
+export const experimental_ppr = true;
+
 export default function DashboardLayout({
   children,
 }: {

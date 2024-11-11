@@ -1,37 +1,26 @@
 import Link from "next/link";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import { appConstants } from "./constants";
-import { getAuthService } from "@/lib/auth-service";
+import { CtaButton } from "./cta-button.server";
+import { Suspense } from "react";
+
+export const experimental_ppr = true;
 
 export default async function LandingPage() {
-  const user = await getAuthService().getAuthSession();
-
-  const ctaUrl = user
-    ? appConstants.AUTHENTICATED_REDIRECT_PATH
-    : appConstants.LOGIN_PATH;
-  const ctaText = user ? "Dashboard" : "Get Started";
-
   return (
     <div className="flex flex-col min-h-[100dvh]">
       <header className="px-4 lg:px-6 h-14 flex items-center">
-        <div>
-          <Image
-            src="/icons/logo-no-background.svg"
-            alt={appConstants.APP_NAME}
-            width={100}
-            height={100}
-            className="hidden lg:inline-block overflow-hidden object-cover object-center"
-          />
-          <Image
-            src="/icons/logo-only.png"
-            alt={appConstants.APP_NAME}
-            width={30}
-            height={30}
-            className="inline-block lg:hidden overflow-hidden object-cover object-center"
-          />
-        </div>
+        <img
+          src="/icons/logo-no-background.svg"
+          alt={appConstants.APP_NAME}
+          className="hidden lg:inline-block h-8 w-auto"
+        />
+        <img
+          src="/icons/logo-only.png"
+          alt={appConstants.APP_NAME}
+          className="inline-block lg:hidden h-8 w-auto"
+        />
         <nav className="ml-auto flex gap-2 sm:gap-4 items-center">
           <Button className="hidden lg:inline-block" variant="ghost" asChild>
             <Link href="/#features">Features</Link>
@@ -39,9 +28,19 @@ export default async function LandingPage() {
           <Button className="hidden lg:inline-block" variant="ghost" asChild>
             <Link href="/#testimonials">Testimonials</Link>
           </Button>
-          <Button asChild>
-            <Link href={ctaUrl}>{ctaText}</Link>
-          </Button>
+          <Suspense
+            fallback={
+              <Button
+                variant="outline"
+                disabled={true}
+                className="animate-pulse"
+              >
+                Loading
+              </Button>
+            }
+          >
+            <CtaButton />
+          </Suspense>
         </nav>
       </header>
       <main className="flex-1 ">
@@ -63,15 +62,23 @@ export default async function LandingPage() {
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <Button asChild>
-                    <Link href={ctaUrl}>{ctaText}</Link>
-                  </Button>
+                  <Suspense
+                    fallback={
+                      <Button
+                        variant="outline"
+                        disabled={true}
+                        className="animate-pulse"
+                      >
+                        Loading
+                      </Button>
+                    }
+                  >
+                    <CtaButton />
+                  </Suspense>
                 </div>
               </div>
-              <Image
+              <img
                 src="/assets/man-enjoying-travel-planned-using-tripwise.png"
-                width="550"
-                height="550"
                 alt="Hero"
                 className="mx-auto aspect-square overflow-hidden rounded-xl object-cover sm:w-full lg:order-last"
               />
@@ -100,10 +107,8 @@ export default async function LandingPage() {
               </div>
             </div>
             <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-2 lg:gap-12">
-              <Image
+              <img
                 src="/assets/tripwise-dashboard-helping-to-plan-your-next-travel.png"
-                width="550"
-                height="310"
                 alt="Feature"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full lg:order-last"
               />
@@ -238,9 +243,19 @@ export default async function LandingPage() {
             </div>
             <div className="mx-auto w-full max-w-sm space-y-2">
               <form className="flex py-2 mx-auto justify-center items-center">
-                <Button variant="secondary" asChild>
-                  <Link href={ctaUrl}>{ctaText}</Link>
-                </Button>
+                <Suspense
+                  fallback={
+                    <Button
+                      variant="outline"
+                      disabled={true}
+                      className="animate-pulse"
+                    >
+                      Loading
+                    </Button>
+                  }
+                >
+                  <CtaButton variant="secondary" />
+                </Suspense>
               </form>
               <p className="text-xs">
                 By signing up, you agree to our{" "}

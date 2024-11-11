@@ -12,8 +12,8 @@ export const unauthenticatedActionClient = createSafeActionClient({
 
 export const authenticatedActionClient = unauthenticatedActionClient.use(
   async ({ next }) => {
-    const user = await getAuthService().getAuthSession();
-    if (!user) throw new Error("Unauthenticated");
-    return next({ ctx: { user } });
+    const userId = await getAuthService().getAuthSession();
+    if (!userId) throw new Error("Unauthenticated");
+    return next({ ctx: { userId } });
   }
 );

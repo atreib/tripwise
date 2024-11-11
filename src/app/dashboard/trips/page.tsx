@@ -1,12 +1,11 @@
-import { getAuthService } from "@/lib/auth-service";
 import { Suspense } from "react";
 import { TripsTable } from "./trips-table.server";
 import { TripsTableSkeleton } from "./trips-table-skeleton.server";
 import TripPlannerWizard from "./new-trip-wizard.client";
 
-export default async function TripsPage() {
-  await getAuthService().requireAuthSession();
+export const experimental_ppr = true;
 
+export default async function TripsPage() {
   return (
     <div className="w-full flex flex-col gap-4">
       <header className="flex justify-between items-center">
