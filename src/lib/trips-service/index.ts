@@ -20,6 +20,7 @@ import { generateTripPointsOfInterest } from "./prompts/generate-trip-points-of-
 import { generateTripDocuments } from "./prompts/generate-trip-documents";
 import { generateTripLocalEtiquettes } from "./prompts/generate-trip-local-etiquettes";
 import { generateTripFoodRecommendations } from "./prompts/generate-trip-food-recommendations";
+import { generateTranslation } from "./prompts/translation";
 
 async function updateTripSummary(props: { trip: Trip }) {
   const summary = await generateTripSummary({ trip: props.trip });
@@ -231,6 +232,13 @@ async function getAllTrips() {
   return tripSchema.array().parse(trips);
 }
 
+async function translateText(props: {
+  destination: Trip["destination"];
+  text: string;
+}) {
+  return generateTranslation(props);
+}
+
 export function getTripsService() {
   return {
     createTrip,
@@ -244,5 +252,6 @@ export function getTripsService() {
     deleteTrip,
     getLatestFewTripByUserId,
     getAllTrips,
+    translateText,
   };
 }
