@@ -111,11 +111,7 @@ export function TranslationDialog({
         </section>
         <DialogFooter>
           <DialogClose asChild>
-            <Button
-              type="button"
-              variant="outline"
-              disabled={status === "loading"}
-            >
+            <Button type="button" variant="outline">
               Close
             </Button>
           </DialogClose>

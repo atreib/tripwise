@@ -4,7 +4,12 @@ import { getTripsService } from "@/lib/trips-service";
 import { Trip } from "@/lib/trips-service/types";
 import { notFound } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
-import { LanguagesIcon, MapPinIcon } from "lucide-react";
+import {
+  DollarSignIcon,
+  LanguagesIcon,
+  Loader2Icon,
+  MapPinIcon,
+} from "lucide-react";
 import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PackAndDocsCard } from "./pack-and-docs-card.server";
 import { PackAndDocsCardSkeleton } from "./pack-and-docs-card-skeleton.server";
@@ -17,6 +22,7 @@ import { AttractionsSkeleton } from "./attractions-skeleton.server";
 import { TabsOnUrl } from "./tabs-on-url.client";
 import { Button } from "@/components/ui/button";
 import { TranslationDialog } from "./translation-dialog.client";
+import { CurrencyCalculatorDialog } from "./currency-calculator.server";
 
 // TODO: Revalidate ISR when we allow people to edit trips
 
@@ -41,13 +47,37 @@ export default async function TripPage({ params }: Props) {
   if (!trip) return notFound();
   return (
     <div className="flex flex-col gap-8 w-full overflow-auto">
-      <nav>
+      <nav className="flex gap-4">
         <TranslationDialog tripDestination={trip.destination}>
           <Button variant="secondary">
             <LanguagesIcon className="mr-2" />
             Quick translate
           </Button>
         </TranslationDialog>
+        {trip.currency ? (
+          <Suspense
+            fallback={
+              <Button
+                variant="secondary"
+                className="animate-pulse"
+                disabled={true}
+              >
+                <Loader2Icon className="w-4 h-4 animate-spin mr-2" />
+                Exchange rate calculator
+              </Button>
+            }
+          >
+            <CurrencyCalculatorDialog
+              userLocalCurrencyCode={"USD"}
+              destinationLocalCurrencyCode={trip.currency}
+            >
+              <Button variant="secondary">
+                <DollarSignIcon className="w-4 h-4 mr-2" />
+                Exchange rate calculator
+              </Button>
+            </CurrencyCalculatorDialog>
+          </Suspense>
+        ) : null}
       </nav>
       <Card className="w-full">
         <CardContent className="p-6">

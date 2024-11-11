@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import {
   Trip,
   tripDocumentsSchema,
+  TripGenerated,
   tripGeneratedSchema,
   tripLocalEtiquetteSchema,
   tripLocalFoodSchema,
@@ -21,6 +22,7 @@ import { generateTripDocuments } from "./prompts/generate-trip-documents";
 import { generateTripLocalEtiquettes } from "./prompts/generate-trip-local-etiquettes";
 import { generateTripFoodRecommendations } from "./prompts/generate-trip-food-recommendations";
 import { generateTranslation } from "./prompts/translation";
+import { getCurrentExchangeRate } from "./utils/currency-exchange";
 
 async function updateTripSummary(props: { trip: Trip }) {
   const summary = await generateTripSummary({ trip: props.trip });
@@ -239,6 +241,16 @@ async function translateText(props: {
   return generateTranslation(props);
 }
 
+async function getDestinationCurrentExchangeRate(props: {
+  userLocalCurrencyCode: string;
+  destinationLocalCurrencyCode: TripGenerated["currency"];
+}) {
+  return getCurrentExchangeRate({
+    currencyCodeFrom: props.userLocalCurrencyCode,
+    currencyCodeTo: props.destinationLocalCurrencyCode,
+  });
+}
+
 export function getTripsService() {
   return {
     createTrip,
@@ -253,5 +265,6 @@ export function getTripsService() {
     getLatestFewTripByUserId,
     getAllTrips,
     translateText,
+    getDestinationCurrentExchangeRate,
   };
 }
