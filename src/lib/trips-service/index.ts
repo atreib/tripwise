@@ -206,6 +206,17 @@ async function deleteTrip(props: { tripId: string }) {
   await db.deleteFrom("trip").where("id", "=", props.tripId).execute();
 }
 
+async function getLatestFewTripByUserId(props: { userId: string }) {
+  const trips = await db
+    .selectFrom("trip")
+    .selectAll()
+    .where("userId", "=", props.userId)
+    .orderBy("created_at", "desc")
+    .limit(3)
+    .execute();
+  return tripSchema.array().parse(trips);
+}
+
 export function getTripsService() {
   return {
     createTrip,
@@ -217,5 +228,6 @@ export function getTripsService() {
     getTripPointsOfInterest,
     getTripsByUserId,
     deleteTrip,
+    getLatestFewTripByUserId,
   };
 }
