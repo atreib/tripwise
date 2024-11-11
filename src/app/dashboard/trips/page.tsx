@@ -1,8 +1,8 @@
 import { getAuthService } from "@/lib/auth-service";
-import { NewTripBtn } from "./components.client";
 import { Suspense } from "react";
 import { TripsTable } from "./trips-table.server";
 import { TripsTableSkeleton } from "./trips-table-skeleton.server";
+import TripPlannerWizard from "./new-trip-wizard.client";
 
 export default async function TripsPage() {
   await getAuthService().requireAuthSession();
@@ -11,7 +11,7 @@ export default async function TripsPage() {
     <div className="w-full flex flex-col gap-4">
       <header className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Your trips</h1>
-        <NewTripBtn />
+        <TripPlannerWizard />
       </header>
       <section>
         <Suspense fallback={<TripsTableSkeleton />}>
