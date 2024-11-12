@@ -6,7 +6,7 @@ import { User } from "../user-service/types";
 
 const MAGIC_LINK_CALLBACK_PATH = "/api/auth/callback";
 const UNAUTHENTICATED_REDIRECT_PATH = "/";
-const FREE_TIER_LIMIT = 50;
+export const FREE_TIER_LIMIT = 50;
 const FREE_TIER_FULL_MESSAGE =
   "Sorry, the free tier is full. Please upgrade to a paid plan to continue.";
 

@@ -53,7 +53,7 @@ export default async function TripPage({ params }: Props) {
   if (!trip) return notFound();
   return (
     <div className="flex flex-col gap-8 w-full overflow-auto">
-      <nav className="flex gap-4">
+      <nav className="flex flex-wrap gap-4">
         <TranslationDialog tripDestination={trip.destination}>
           <Button variant="secondary">
             <LanguagesIcon className="mr-2" />

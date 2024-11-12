@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useState, type MouseEvent } from "react";
 import { Loader2Icon } from "lucide-react";
 import { Button, ButtonProps } from "./ui/button";
 
@@ -15,9 +15,9 @@ export function ButtonWithLoading({
   disableLoading = false,
   ...props
 }: Props) {
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  async function handleClick(ev: React.MouseEvent<HTMLButtonElement>) {
+  async function handleClick(ev: MouseEvent<HTMLButtonElement>) {
     if (!disableLoading) setIsLoading(true);
     props.onClick?.(ev);
   }

@@ -14,7 +14,7 @@ export function CurrencyCalculatorField({
   userLocalCurrencyCode,
   destinationLocalCurrencyCode,
 }: Props) {
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState<number>(0);
 
   return (
     <div className="flex gap-2 items-center">
@@ -23,8 +23,8 @@ export function CurrencyCalculatorField({
         <Input
           type="number"
           inputMode="decimal"
-          value={amount}
-          onChange={(e) => setAmount(Number(e.target.value))}
+          value={amount.toString().replace(/^0+/, "")}
+          onChange={(e) => setAmount(Number(e.target.value.replace(/^0+/, "")))}
           className="w-32"
         />
       </div>

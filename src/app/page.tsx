@@ -5,13 +5,14 @@ import { appConstants } from "./constants";
 import { CtaButton } from "./cta-button.server";
 import { Suspense } from "react";
 import { CtaButtonSkeleton } from "./cta-button-skeleton.server";
+import { FREE_TIER_LIMIT } from "@/lib/auth-service";
 
 export const experimental_ppr = true;
 
 export default async function LandingPage() {
   return (
     <div className="flex flex-col min-h-[100dvh]">
-      <header className="px-4 lg:px-6 h-14 flex items-center">
+      <header className="px-4 lg:px-6 h-14 flex items-center fixed w-full bg-background/30 backdrop-blur-sm">
         <img
           src="/icons/logo-no-background.svg"
           alt={appConstants.APP_NAME}
@@ -40,23 +41,27 @@ export default async function LandingPage() {
             <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
-                  <h1 className="text-4xl font-bold tracking-tighter sm:text-6xl text-balance">
-                    Effortless Travel Planning with {appConstants.APP_NAME}
+                  <h1 className="text-4xl font-bold tracking-tighter sm:text-6xl text-balance text-center lg:text-left">
+                    AI-Powered Travel Magic: Your Perfect Trip, Planned in
+                    Seconds
                   </h1>
-                  <p className="max-w-[600px]">
-                    Our state-of-the-art platform is singularly focused on
-                    transforming complex, often opaque data into clear,
-                    actionable wisdom. Whether you&apos;re a researcher working
-                    through intricate datasets, a business leader making pivotal
-                    decisions, or a policymaker shaping the future, our tools
-                    are crafted to illuminate the path ahead.
+                  <p className="max-w-[600px] mx-auto lg:mx-0 text-center lg:text-left">
+                    From personalized itineraries to smart packing lists,{" "}
+                    {appConstants.APP_NAME}&apos;s AI crafts your dream vacation
+                    effortlessly.{" "}
+                    <span className="font-semibold">
+                      Explore more, stress less.
+                    </span>
                   </p>
                 </div>
-                <div className="flex flex-col gap-2 min-[400px]:flex-row">
+                <div className="flex flex-col gap-2 min-[400px]:flex-row mx-auto lg:mx-0">
                   <Suspense fallback={<CtaButtonSkeleton />}>
                     <CtaButton />
                   </Suspense>
                 </div>
+                <aside className="text-sm text-muted-foreground animate-pulse text-center lg:text-left">
+                  Free for the first {FREE_TIER_LIMIT} users, hurry up!
+                </aside>
               </div>
               <img
                 src="/assets/man-enjoying-travel-planned-using-tripwise.png"
