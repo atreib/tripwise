@@ -6,7 +6,7 @@ import { getAuthService } from "../auth-service";
 export const unauthenticatedActionClient = createSafeActionClient({
   handleServerError(e) {
     console.error("Action error:", e.message);
-    return "Oh no, something went wrong!";
+    return e.message;
   },
 });
 

@@ -6,8 +6,18 @@ import { User } from "../user-service/types";
 
 const MAGIC_LINK_CALLBACK_PATH = "/api/auth/callback";
 const UNAUTHENTICATED_REDIRECT_PATH = "/";
+const FREE_TIER_LIMIT = 50;
+const FREE_TIER_FULL_MESSAGE =
+  "Sorry, the free tier is full. Please upgrade to a paid plan to continue.";
 
 async function sendMagicLink(email: string): Promise<void> {
+  const user = await getUserService().getUserByEmail(email);
+  const totalUsers = await getUserService().getTotalUsers();
+
+  if (!user && totalUsers >= FREE_TIER_LIMIT) {
+    throw new Error(FREE_TIER_FULL_MESSAGE);
+  }
+
   const magicLinkToken = getMagicLinkUtil().generateMagicLinkToken({ email });
   const magicLinkUrl = `${MAGIC_LINK_CALLBACK_PATH}?token=${magicLinkToken}`;
   await getMagicLinkUtil().sendMagicLinkEmail(email, magicLinkUrl);
@@ -19,12 +29,21 @@ async function authenticateWithMagicLink(token: string): Promise<void> {
   const email = magicLink.email;
   let user = await getUserService().getUserByEmail(email);
   if (!user) {
-    const name = email.split("@")[0];
-    user = await getUserService().createUser({
-      email,
-      name,
-    });
+    const totalUsers = await getUserService().getTotalUsers();
+    if (totalUsers < FREE_TIER_LIMIT) {
+      const name = email.split("@")[0];
+      user = await getUserService().createUser({
+        email,
+        name,
+      });
+    }
   }
+
+  if (!user)
+    return redirect(
+      `${UNAUTHENTICATED_REDIRECT_PATH}?message=${FREE_TIER_FULL_MESSAGE}`
+    );
+
   await cookieSessionUtils.createSession({
     userId: user.id,
   });

@@ -27,7 +27,7 @@ export default function LongLoading() {
       setCurrentMessageIndex((prevIndex) =>
         prevIndex === loadingMessages.length - 1 ? 0 : prevIndex + 1
       );
-    }, 800);
+    }, 1500);
 
     return () => clearInterval(interval);
   }, []);

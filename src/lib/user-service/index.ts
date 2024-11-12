@@ -42,11 +42,20 @@ async function createUser(user: Omit<User, "id">): Promise<User> {
   return userSchema.parse(newUser);
 }
 
+async function getTotalUsers(): Promise<number> {
+  const totalUsers = await db
+    .selectFrom("user")
+    .select(({ fn }) => [fn.count<number>("user.id").as("users_count")])
+    .executeTakeFirstOrThrow();
+  return totalUsers.users_count;
+}
+
 export function getUserService() {
   return {
     getUserByIdOrThrow,
     getUserByEmail,
     getUserById,
     createUser,
+    getTotalUsers,
   };
 }
