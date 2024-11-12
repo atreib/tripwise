@@ -6,13 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Plane,
   Calendar,
   Palmtree,
@@ -22,6 +15,7 @@ import {
   ChevronsUpDown,
   Loader2Icon,
   ClockIcon,
+  TreePalmIcon,
 } from "lucide-react";
 import {
   Dialog,
@@ -156,7 +150,7 @@ export default function TripPlannerWizard() {
       }
     } catch (err) {
       const error = err as Error;
-      if (error.message !== "NEXT REDIRECT") setError(error.message);
+      if (error.message !== "NEXT_REDIRECT") setError(error.message);
     } finally {
       setIsLoading(false);
     }
@@ -261,20 +255,28 @@ export default function TripPlannerWizard() {
         );
       case "season":
         return (
-          <Select
+          <RadioGroup
             value={tripPlan.season}
             onValueChange={(value) => handleInputChange("season", value)}
+            className="flex flex-col space-y-2"
           >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select a season" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="spring">Spring</SelectItem>
-              <SelectItem value="summer">Summer</SelectItem>
-              <SelectItem value="autumn">Autumn</SelectItem>
-              <SelectItem value="winter">Winter</SelectItem>
-            </SelectContent>
-          </Select>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="spring" id="spring" />
+              <Label htmlFor="spring">Spring</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="summer" id="summer" />
+              <Label htmlFor="summer">Summer</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="autumn" id="autumn" />
+              <Label htmlFor="autumn">Autumn</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="winter" id="winter" />
+              <Label htmlFor="winter">Winter</Label>
+            </div>
+          </RadioGroup>
         );
       case "budget":
         return (
@@ -335,8 +337,11 @@ export default function TripPlannerWizard() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
-        <Button>New Trip</Button>
+      <DialogTrigger asChild>
+        <Button>
+          <TreePalmIcon className="w-4 h-4" />
+          Plan a new trip
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -350,10 +355,11 @@ export default function TripPlannerWizard() {
         </DialogHeader>
         <AnimatePresence mode="wait">
           <motion.div
+            className="mx-1"
             key={currentStep}
-            initial={{ opacity: 0, x: 50 }}
+            initial={{ opacity: 0, x: 10 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
+            exit={{ opacity: 0, x: -10 }}
             transition={{ duration: 0.3 }}
           >
             {renderStepContent()}
@@ -365,7 +371,11 @@ export default function TripPlannerWizard() {
           </aside>
         ) : null}
         <div className="w-full flex items-center justify-between">
-          <Button onClick={handlePrevious} variant="outline">
+          <Button
+            onClick={handlePrevious}
+            variant="outline"
+            disabled={isLoading}
+          >
             {currentStep === 0 ? "Cancel" : "Previous"}
           </Button>
           <Button

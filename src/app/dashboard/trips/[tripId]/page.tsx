@@ -23,6 +23,12 @@ import { TabsOnUrl } from "./tabs-on-url.client";
 import { Button } from "@/components/ui/button";
 import { TranslationDialog } from "./translation-dialog.client";
 import { CurrencyCalculatorDialog } from "./currency-calculator.server";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 // TODO: Revalidate ISR when we allow people to edit trips
 
@@ -91,7 +97,16 @@ export default async function TripPage({ params }: Props) {
               <p>{trip.budget}</p>
               <p>{trip.purpose}</p>
             </div>
-            <p className="text-muted-foreground">{trip.summary}</p>
+            <Accordion type="single" collapsible>
+              <AccordionItem value="summary">
+                <AccordionTrigger className="hover:no-underline text-muted-foreground text-lg">
+                  What to expect from {trip.destination}?
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground text-base">
+                  {trip.summary}
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
         </CardContent>
       </Card>

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { appConstants } from "./constants";
 import { CtaButton } from "./cta-button.server";
 import { Suspense } from "react";
+import { CtaButtonSkeleton } from "./cta-button-skeleton.server";
 
 export const experimental_ppr = true;
 
@@ -28,17 +29,7 @@ export default async function LandingPage() {
           <Button className="hidden lg:inline-block" variant="ghost" asChild>
             <Link href="/#testimonials">Testimonials</Link>
           </Button>
-          <Suspense
-            fallback={
-              <Button
-                variant="outline"
-                disabled={true}
-                className="animate-pulse"
-              >
-                Loading
-              </Button>
-            }
-          >
+          <Suspense fallback={<CtaButtonSkeleton />}>
             <CtaButton />
           </Suspense>
         </nav>
@@ -62,17 +53,7 @@ export default async function LandingPage() {
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <Suspense
-                    fallback={
-                      <Button
-                        variant="outline"
-                        disabled={true}
-                        className="animate-pulse"
-                      >
-                        Loading
-                      </Button>
-                    }
-                  >
+                  <Suspense fallback={<CtaButtonSkeleton />}>
                     <CtaButton />
                   </Suspense>
                 </div>
@@ -243,17 +224,7 @@ export default async function LandingPage() {
             </div>
             <div className="mx-auto w-full max-w-sm space-y-2">
               <form className="flex py-2 mx-auto justify-center items-center">
-                <Suspense
-                  fallback={
-                    <Button
-                      variant="outline"
-                      disabled={true}
-                      className="animate-pulse"
-                    >
-                      Loading
-                    </Button>
-                  }
-                >
+                <Suspense fallback={<CtaButtonSkeleton variant="secondary" />}>
                   <CtaButton variant="secondary" />
                 </Suspense>
               </form>

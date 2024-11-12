@@ -21,7 +21,7 @@ export async function TripsTable() {
 
   return (
     <Table>
-      <TableCaption>Your trips.</TableCaption>
+      {trips.length > 0 ? <TableCaption>Your trips.</TableCaption> : null}
       <TableHeader>
         <TableRow>
           <TableHead>Destination</TableHead>
@@ -35,6 +35,16 @@ export async function TripsTable() {
         </TableRow>
       </TableHeader>
       <TableBody>
+        {trips.length === 0 ? (
+          <TableRow>
+            <TableCell
+              colSpan={5}
+              className="text-center py-8 text-sm text-muted-foreground"
+            >
+              No trips found.
+            </TableCell>
+          </TableRow>
+        ) : null}
         {trips.map((trip) => (
           <TableRow key={trip.id}>
             <TableCell className="font-medium">{trip.destination}</TableCell>

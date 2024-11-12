@@ -13,7 +13,7 @@ export async function CtaButton({ variant }: Props) {
   const ctaUrl = user
     ? appConstants.AUTHENTICATED_REDIRECT_PATH
     : appConstants.LOGIN_PATH;
-  const ctaText = user ? "Dashboard" : "Get Started";
+  const ctaText = user ? "Go to your dashboard" : "Get Started";
 
   return (
     <Button asChild variant={variant}>

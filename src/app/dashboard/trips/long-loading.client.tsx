@@ -10,6 +10,13 @@ const loadingMessages = [
   "Booking the best spots...",
   "Preparing your travel playlist...",
   "Arranging a window seat for you...",
+  "Brewing up some coffee...",
+  "Mapping out hidden gems...",
+  "Ensuring your journey is unforgettable...",
+  "Finding the best local cuisine...",
+  "Curating your adventure...",
+  "Setting up your dream itinerary...",
+  "Double-checking your travel essentials...",
 ];
 
 export default function LongLoading() {
@@ -20,7 +27,7 @@ export default function LongLoading() {
       setCurrentMessageIndex((prevIndex) =>
         prevIndex === loadingMessages.length - 1 ? 0 : prevIndex + 1
       );
-    }, 3000);
+    }, 800);
 
     return () => clearInterval(interval);
   }, []);
