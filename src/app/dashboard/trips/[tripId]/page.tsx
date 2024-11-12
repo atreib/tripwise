@@ -11,8 +11,8 @@ import {
   MapPinIcon,
 } from "lucide-react";
 import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PackAndDocsCard } from "./pack-and-docs-card.server";
-import { PackAndDocsCardSkeleton } from "./pack-and-docs-card-skeleton.server";
+import { PackingCard } from "./packing-card.server";
+import { PackingCardSkeleton } from "./packing-card-skeleton.server";
 import { LocalEtiquettesCardSkeleton } from "./local-etiquettes-card-skeleton.server";
 import { LocalEtiquettesCard } from "./local-etiquettes-card.server";
 import { LocalFoodSkeleton } from "./local-food-skeleton.server";
@@ -29,6 +29,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { DocsCard } from "./docs-card.server";
+import { DocsCardSkeleton } from "./docs-card-skeleton.server";
 
 // TODO: Revalidate ISR when we allow people to edit trips
 
@@ -114,19 +116,23 @@ export default async function TripPage({ params }: Props) {
       <TabsOnUrl defaultValue="packing">
         <div className="w-full overflow-auto whitespace-nowrap">
           <TabsList>
-            <TabsTrigger value="packing">Packing & Documents</TabsTrigger>
+            <TabsTrigger value="packing">Packing</TabsTrigger>
+            <TabsTrigger value="documents">Documents</TabsTrigger>
             <TabsTrigger value="etiquettes">Local Etiquettes</TabsTrigger>
             <TabsTrigger value="food">Local Food</TabsTrigger>
             <TabsTrigger value="attractions">Attractions</TabsTrigger>
           </TabsList>
         </div>
 
-        <TabsContent
-          value="packing"
-          className="flex flex-col lg:flex-row gap-6"
-        >
-          <Suspense fallback={<PackAndDocsCardSkeleton />}>
-            <PackAndDocsCard trip={trip} />
+        <TabsContent value="packing">
+          <Suspense fallback={<PackingCardSkeleton />}>
+            <PackingCard trip={trip} />
+          </Suspense>
+        </TabsContent>
+
+        <TabsContent value="documents">
+          <Suspense fallback={<DocsCardSkeleton />}>
+            <DocsCard trip={trip} />
           </Suspense>
         </TabsContent>
 

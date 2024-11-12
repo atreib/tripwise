@@ -43,33 +43,7 @@ import {
 import { createTripAction } from "./actions";
 import { Trip } from "@/lib/trips-service/types";
 import LongLoading from "./long-loading.client";
-
-const destinations = [
-  {
-    value: "Porto Alegre, Brazil",
-    label: "Porto Alegre, Brazil",
-  },
-  {
-    value: "Paris, France",
-    label: "Paris, France",
-  },
-  {
-    value: "Tokyo, Japan",
-    label: "Tokyo, Japan",
-  },
-  {
-    value: "New York, USA",
-    label: "New York, USA",
-  },
-  {
-    value: "Sydney, Australia",
-    label: "Sydney, Australia",
-  },
-  {
-    value: "Barcelona, Spain",
-    label: "Barcelona, Spain",
-  },
-];
+import { destinations } from "@/lib/destinations-service/destinations.client";
 
 const steps = [
   {
@@ -190,9 +164,7 @@ export default function TripPlannerWizard() {
                 className="w-full justify-between"
               >
                 {tripPlan.destination
-                  ? destinations.find(
-                      (dest) => dest.value === tripPlan.destination
-                    )?.label
+                  ? destinations.find((dest) => dest === tripPlan.destination)
                   : "Select destination..."}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
@@ -205,8 +177,8 @@ export default function TripPlannerWizard() {
                   <CommandGroup>
                     {destinations.map((dest) => (
                       <CommandItem
-                        key={dest.value}
-                        value={dest.value}
+                        key={dest}
+                        value={dest}
                         onSelect={(currentValue: string) => {
                           setTripPlan({
                             ...tripPlan,
@@ -218,12 +190,12 @@ export default function TripPlannerWizard() {
                         <Check
                           className={cn(
                             "mr-2 h-4 w-4",
-                            tripPlan.destination === dest.value
+                            tripPlan.destination === dest
                               ? "opacity-100"
                               : "opacity-0"
                           )}
                         />
-                        {dest.label}
+                        {dest}
                       </CommandItem>
                     ))}
                   </CommandGroup>
