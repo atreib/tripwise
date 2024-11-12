@@ -169,7 +169,7 @@ export default function TripPlannerWizard() {
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className=" min-w-max p-0">
+            <PopoverContent className="w-[317px] md:w-[454px] p-0">
               <Command>
                 <CommandInput placeholder="Search destination..." />
                 <CommandList>
@@ -202,6 +202,11 @@ export default function TripPlannerWizard() {
                 </CommandList>
               </Command>
             </PopoverContent>
+            <aside className="mt-4 text-sm text-muted-foreground">
+              Hey, I know we are missing a lot of cool places to go! We are
+              working on adding more destinations pretty soon. Thanks for your
+              patience!
+            </aside>
           </Popover>
         );
       case "duration":
