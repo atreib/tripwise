@@ -3,6 +3,8 @@ import "server-only";
 import { User, userSchema } from "./types";
 import { db } from "@/lib/db";
 import { v4 } from "uuid";
+import { appConstants } from "@/app/constants";
+import { redirect } from "next/navigation";
 
 async function getUserByEmail(email: string): Promise<User | undefined> {
   const user = await db
@@ -50,6 +52,13 @@ async function getTotalUsers(): Promise<number> {
   return totalUsers.users_count;
 }
 
+async function requireBetaAccess(userId: string): Promise<User> {
+  const user = await getUserById(userId);
+  if (!user || !["beta", "staff"].includes(user.role))
+    return redirect(appConstants.LOGOUT_PATH);
+  return user;
+}
+
 export function getUserService() {
   return {
     getUserByIdOrThrow,
@@ -57,5 +66,6 @@ export function getUserService() {
     getUserById,
     createUser,
     getTotalUsers,
+    requireBetaAccess,
   };
 }

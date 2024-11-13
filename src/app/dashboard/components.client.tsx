@@ -19,6 +19,7 @@ export function Breadcrumb() {
         {paths.slice(1).map((path, index) => {
           const href = `/dashboard/${paths.slice(1, index + 2).join("/")}`;
           const isLast = index === paths.length - 2;
+          const isDisabled = path === "beta";
 
           return (
             <li key={path} className="flex items-center">
@@ -26,7 +27,10 @@ export function Breadcrumb() {
               {isLast ? (
                 <span className="ml-2 font-medium capitalize">{path}</span>
               ) : (
-                <Link href={href} className="ml-2 capitalize hover:underline">
+                <Link
+                  href={isDisabled ? "#" : href}
+                  className="ml-2 capitalize hover:underline"
+                >
                   {path}
                 </Link>
               )}

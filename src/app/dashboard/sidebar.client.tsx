@@ -1,6 +1,12 @@
 "use client";
 
-import { HomeIcon, Loader2Icon, LogOutIcon, MapPinIcon } from "lucide-react";
+import {
+  HomeIcon,
+  Loader2Icon,
+  LogOutIcon,
+  MapPinIcon,
+  MessageCircleIcon,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -14,6 +20,7 @@ import {
 import { appConstants } from "../constants";
 import { ButtonWithLoading } from "@/components/button-with-loading";
 import { usePathname } from "next/navigation";
+import { UserRole } from "@/lib/user-service/types";
 
 export type SidebarItem = {
   title: string;
@@ -42,6 +49,14 @@ const accountItems: SidebarItem[] = [
   },
 ];
 
+const betaItems: SidebarItem[] = [
+  {
+    title: "Feedback",
+    url: "/dashboard/beta/feedback",
+    icon: MessageCircleIcon,
+  },
+];
+
 function SidebarButton({ item }: { item: SidebarItem }) {
   const pathname = usePathname();
 
@@ -66,7 +81,11 @@ function SidebarButton({ item }: { item: SidebarItem }) {
   );
 }
 
-export function AppSidebar() {
+type Props = {
+  role: UserRole;
+};
+
+export function AppSidebar({ role }: Props) {
   return (
     <Sidebar>
       <SidebarContent>
@@ -100,6 +119,22 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        {["beta", "staff"].includes(role) ? (
+          <SidebarGroup>
+            <SidebarGroupLabel>Beta</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {betaItems.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild>
+                      <SidebarButton item={item} />
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ) : null}
       </SidebarContent>
     </Sidebar>
   );

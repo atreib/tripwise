@@ -35,6 +35,7 @@ async function authenticateWithMagicLink(token: string): Promise<void> {
       user = await getUserService().createUser({
         email,
         name,
+        role: "beta",
       });
     }
   }

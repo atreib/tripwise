@@ -8,12 +8,14 @@ export interface Database {
   trip_local_etiquette: TripLocalEtiquetteTable;
   trip_local_food: TripLocalFoodTable;
   trip_points_of_interest: TripPointsOfInterestTable;
+  feedback: FeedbackTable;
 }
 
 export interface UserTable {
   id: string;
   email: string;
   name: string;
+  role: "staff" | "beta" | "regular";
   created_at: ColumnType<Date, string | undefined, never>;
 }
 
@@ -62,4 +64,11 @@ export interface TripPointsOfInterestTable {
   tripId: string;
   title: string;
   description: string;
+}
+
+export interface FeedbackTable {
+  id: string;
+  userId: string;
+  message: string;
+  createdAt: ColumnType<Date, string | undefined, never>;
 }

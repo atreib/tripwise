@@ -1,4 +1,4 @@
-"use client"; // Error boundaries must be Client Components
+"use client";
 
 import { AlertTriangle, HomeIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
