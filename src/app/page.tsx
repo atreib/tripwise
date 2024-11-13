@@ -231,8 +231,15 @@ export default async function LandingPage() {
             </div>
             <div className="mx-auto w-full max-w-sm space-y-2">
               <form className="flex py-2 mx-auto justify-center items-center">
-                <Suspense fallback={<GetStartedButton label="Get started" />}>
-                  <DashboardOrGetStartedButton label="Get started" />
+                <Suspense
+                  fallback={
+                    <GetStartedButton variant="secondary" label="Get started" />
+                  }
+                >
+                  <DashboardOrGetStartedButton
+                    variant="secondary"
+                    label="Get started"
+                  />
                 </Suspense>
               </form>
               <p className="text-xs">
