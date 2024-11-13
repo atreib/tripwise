@@ -2,9 +2,9 @@ import Link from "next/link";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { appConstants } from "./constants";
-import { CtaButton } from "./cta-button.server";
+import { DashboardOrGetStartedButton } from "./dashboard-or-get-started-btn.server";
 import { Suspense } from "react";
-import { CtaButtonSkeleton } from "./cta-button-skeleton.server";
+import { GetStartedButton } from "./get-started-btn.server";
 import { FREE_TIER_LIMIT } from "@/lib/auth-service";
 
 export const experimental_ppr = true;
@@ -30,8 +30,8 @@ export default async function LandingPage() {
           <Button className="hidden lg:inline-block" variant="ghost" asChild>
             <Link href="/#testimonials">Testimonials</Link>
           </Button>
-          <Suspense fallback={<CtaButtonSkeleton />}>
-            <CtaButton />
+          <Suspense fallback={<GetStartedButton />}>
+            <DashboardOrGetStartedButton />
           </Suspense>
         </nav>
       </header>
@@ -55,8 +55,8 @@ export default async function LandingPage() {
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row mx-auto lg:mx-0">
-                  <Suspense fallback={<CtaButtonSkeleton />}>
-                    <CtaButton />
+                  <Suspense fallback={<GetStartedButton />}>
+                    <DashboardOrGetStartedButton />
                   </Suspense>
                 </div>
                 <aside className="text-sm text-muted-foreground animate-pulse text-center lg:text-left">
@@ -229,8 +229,8 @@ export default async function LandingPage() {
             </div>
             <div className="mx-auto w-full max-w-sm space-y-2">
               <form className="flex py-2 mx-auto justify-center items-center">
-                <Suspense fallback={<CtaButtonSkeleton variant="secondary" />}>
-                  <CtaButton variant="secondary" />
+                <Suspense fallback={<GetStartedButton />}>
+                  <DashboardOrGetStartedButton />
                 </Suspense>
               </form>
               <p className="text-xs">
