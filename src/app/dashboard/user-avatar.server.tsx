@@ -21,9 +21,11 @@ export async function UserAvatar() {
 
   return (
     <div className="flex items-center gap-2">
-      <Badge variant="secondary" className="capitalize">
-        {user.role}
-      </Badge>
+      {user.role !== "regular" ? (
+        <Badge variant="secondary" className="capitalize">
+          {user.role}
+        </Badge>
+      ) : null}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">

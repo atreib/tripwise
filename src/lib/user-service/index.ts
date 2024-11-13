@@ -55,7 +55,7 @@ async function getTotalUsers(): Promise<number> {
 async function requireBetaAccess(userId: string): Promise<User> {
   const user = await getUserById(userId);
   if (!user || !["beta", "staff"].includes(user.role))
-    return redirect(appConstants.LOGOUT_PATH);
+    return redirect(appConstants.AUTHENTICATED_REDIRECT_PATH);
   return user;
 }
 
