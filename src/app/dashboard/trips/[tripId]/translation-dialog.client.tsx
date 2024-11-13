@@ -69,8 +69,10 @@ export function TranslationDialog({
         <DialogHeader>
           <DialogTitle>Translator</DialogTitle>
           <DialogDescription>
-            Write in your own language and get the translation in the local
-            language from {tripDestination}
+            Our translator can translate messages from your language to the
+            destination&apos;s language, or from the destination&apos;s language
+            to your language. You can freely switch between languages and we
+            will translate it for you.
           </DialogDescription>
           {error ? (
             <aside className="mt-4">
