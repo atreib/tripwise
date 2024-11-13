@@ -8,7 +8,6 @@ import {
   Heading,
   Hr,
   Html,
-  Img,
   Link,
   Preview,
   Section,
@@ -26,11 +25,13 @@ export const MagicLinkTemplate = (props: { name: string; url: string }) => (
     <Preview>Log in with this magic link.</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Img
+        <img
           src={`${baseUrl}/icons/logo-only.png`}
-          width={48}
-          height={48}
           alt={appConstants.APP_NAME}
+          title={appConstants.APP_NAME}
+          style={{ display: "block" }}
+          width="200"
+          height="87"
         />
         <Heading style={heading}>🪄 Your magic link</Heading>
         <Section style={body}>
@@ -48,16 +49,6 @@ export const MagicLinkTemplate = (props: { name: string; url: string }) => (
           <br />- {appConstants.APP_NAME} Team
         </Text>
         <Hr style={hr} />
-        <Img
-          src={`${baseUrl}/icons/logo-only.png`}
-          width={32}
-          height={32}
-          style={{
-            WebkitFilter: "grayscale(100%)",
-            filter: "grayscale(100%)",
-            margin: "20px 0",
-          }}
-        />
       </Container>
     </Body>
   </Html>
