@@ -15,24 +15,12 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "";
-
 export const MagicLinkTemplate = (props: { name: string; url: string }) => (
   <Html>
     <Head />
     <Preview>Log in with this magic link.</Preview>
     <Body style={main}>
       <Container style={container}>
-        <img
-          src={`${baseUrl}/icons/logo-only.png`}
-          alt={appConstants.APP_NAME}
-          title={appConstants.APP_NAME}
-          style={{ display: "block" }}
-          width="200"
-          height="87"
-        />
         <Heading style={heading}>🪄 Your magic link</Heading>
         <Section style={body}>
           <Text style={paragraph}>
