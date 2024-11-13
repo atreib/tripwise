@@ -3,12 +3,16 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Trip } from "@/lib/trips-service/types";
 import { getAuthService } from "@/lib/auth-service";
 import { getTripsService } from "@/lib/trips-service";
+import { CameraIcon, MapPinIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { SmokeTestDialog } from "@/components/smoke-test";
 
 type Props = {
   trip: Trip;
@@ -39,6 +43,20 @@ export async function Attractions({ trip }: Props) {
               <CardContent>
                 <p>{poi.description}</p>
               </CardContent>
+              <CardFooter className="flex items-end justify-end gap-4">
+                <SmokeTestDialog>
+                  <Button variant="outline" size="icon">
+                    <span className="sr-only">Open map</span>
+                    <MapPinIcon className="w-6 h-6" />
+                  </Button>
+                </SmokeTestDialog>
+                <SmokeTestDialog>
+                  <Button variant="outline" size="icon">
+                    <span className="sr-only">Open pictures</span>
+                    <CameraIcon className="w-6 h-6" />
+                  </Button>
+                </SmokeTestDialog>
+              </CardFooter>
             </Card>
           ))}
         </div>

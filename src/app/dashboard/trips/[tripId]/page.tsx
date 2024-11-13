@@ -5,10 +5,12 @@ import { Trip } from "@/lib/trips-service/types";
 import { notFound } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import {
+  BookOpenIcon,
   DollarSignIcon,
   LanguagesIcon,
   Loader2Icon,
   MapPinIcon,
+  TicketCheckIcon,
 } from "lucide-react";
 import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PackingCard } from "./packing-card.server";
@@ -31,6 +33,7 @@ import {
 } from "@/components/ui/accordion";
 import { DocsCard } from "./docs-card.server";
 import { DocsCardSkeleton } from "./docs-card-skeleton.server";
+import { SmokeTestDialog } from "@/components/smoke-test";
 
 // TODO: Revalidate ISR when we allow people to edit trips
 
@@ -86,6 +89,18 @@ export default async function TripPage({ params }: Props) {
             </CurrencyCalculatorDialog>
           </Suspense>
         ) : null}
+        <SmokeTestDialog>
+          <Button variant="secondary">
+            <TicketCheckIcon className="w-4 h-4 mr-2" />
+            Auto booking your tickets
+          </Button>
+        </SmokeTestDialog>
+        <SmokeTestDialog>
+          <Button variant="secondary">
+            <BookOpenIcon className="w-4 h-4 mr-2" />
+            Generate itinerary with AI
+          </Button>
+        </SmokeTestDialog>
       </nav>
       <Card className="w-full">
         <CardContent className="p-6">
