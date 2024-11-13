@@ -37,8 +37,8 @@ export async function CurrencyCalculatorDialog({
         <DialogHeader>
           <DialogTitle>Exchange Rate</DialogTitle>
           <DialogDescription>
-            Exchange rate from {userLocalCurrencyCode} to{" "}
-            {destinationLocalCurrencyCode}
+            Quickly calculate the exchange rate between {userLocalCurrencyCode}{" "}
+            and {destinationLocalCurrencyCode}
           </DialogDescription>
         </DialogHeader>
         <section className="flex flex-col gap-4">

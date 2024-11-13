@@ -1,6 +1,8 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ArrowLeftRightIcon } from "lucide-react";
 import { useState } from "react";
 
 type Props = {
@@ -16,10 +18,26 @@ export function CurrencyCalculatorField({
 }: Props) {
   const [amount, setAmount] = useState<number>(0);
 
+  const [from, setFrom] = useState(userLocalCurrencyCode);
+  const [to, setTo] = useState(destinationLocalCurrencyCode);
+
+  function calculateResult() {
+    if (from === userLocalCurrencyCode) {
+      return (amount * exchangeRate).toFixed(2);
+    }
+    return (amount / exchangeRate).toFixed(2);
+  }
+
+  function swapCurrencies() {
+    const tempFrom = from;
+    setFrom(to);
+    setTo(tempFrom);
+  }
+
   return (
-    <div className="flex gap-2 items-center">
+    <div className="mt-4 flex gap-2 items-center">
       <div className="flex gap-2 items-center">
-        <p>{userLocalCurrencyCode}</p>
+        <p>{from}</p>
         <Input
           type="number"
           inputMode="decimal"
@@ -28,10 +46,14 @@ export function CurrencyCalculatorField({
           className="w-32"
         />
       </div>
-      <div className="text-sm text-muted-foreground">is</div>
+      <div className="text-sm text-muted-foreground">
+        <Button variant="ghost" size="icon" onClick={swapCurrencies}>
+          <ArrowLeftRightIcon className="w-4 h-4" />
+        </Button>
+      </div>
       <div className="flex gap-2 items-center">
-        <p>{destinationLocalCurrencyCode}</p>
-        <p>{(amount * exchangeRate).toFixed(2)}</p>
+        <p>{to}</p>
+        <p>{calculateResult()}</p>
       </div>
     </div>
   );
