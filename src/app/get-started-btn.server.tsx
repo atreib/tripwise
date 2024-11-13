@@ -4,12 +4,13 @@ import { appConstants } from "./constants";
 
 type Props = {
   variant?: ButtonProps["variant"];
+  label?: string;
 };
 
-export function GetStartedButton({ variant }: Props) {
+export function GetStartedButton({ variant, label }: Props) {
   return (
     <Button asChild variant={variant}>
-      <Link href={appConstants.LOGIN_PATH}>Plan your next trip</Link>
+      <Link href={appConstants.LOGIN_PATH}>{label}</Link>
     </Button>
   );
 }

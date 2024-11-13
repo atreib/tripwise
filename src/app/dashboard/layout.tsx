@@ -4,6 +4,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "./sidebar.server";
 import { Suspense } from "react";
 import { AppSidebarSkeleton } from "./sidebar-skeleton.server";
+import { IdentifyUser } from "@/lib/analytics-service/components/identify.server";
 
 export const experimental_ppr = true;
 
@@ -24,6 +25,9 @@ export default async function DashboardLayout({
           <div className="flex">{children}</div>
         </div>
       </main>
+      <Suspense fallback={null}>
+        <IdentifyUser />
+      </Suspense>
     </SidebarProvider>
   );
 }

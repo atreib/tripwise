@@ -5,6 +5,8 @@ import { appConstants } from "./constants";
 import { Toaster } from "@/components/ui/toaster";
 import { NavigationFeedback } from "./navigation-feedback";
 import { Suspense } from "react";
+import { PosthogProvider } from "@/lib/analytics-service/components/posthog-provider.client";
+import { PageView } from "@/lib/analytics-service/components/pageview.client";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -65,15 +67,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-        <Suspense fallback={null}>
-          <NavigationFeedback />
-        </Suspense>
-        <Toaster />
-      </body>
+      <PosthogProvider>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          {children}
+          <Suspense fallback={null}>
+            <PageView />
+          </Suspense>
+          <Suspense fallback={null}>
+            <NavigationFeedback />
+          </Suspense>
+          <Toaster />
+        </body>
+      </PosthogProvider>
     </html>
   );
 }

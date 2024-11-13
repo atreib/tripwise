@@ -6,9 +6,10 @@ import { GetStartedButton } from "./get-started-btn.server";
 
 type Props = {
   variant?: ButtonProps["variant"];
+  label?: string;
 };
 
-export async function DashboardOrGetStartedButton({ variant }: Props) {
+export async function DashboardOrGetStartedButton({ variant, label }: Props) {
   const user = await getAuthService().getAuthSession();
 
   if (user) {
@@ -21,5 +22,5 @@ export async function DashboardOrGetStartedButton({ variant }: Props) {
     );
   }
 
-  return <GetStartedButton />;
+  return <GetStartedButton label={label} />;
 }

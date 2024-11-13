@@ -40,6 +40,8 @@
     "next-safe-action": "^7.9.9",
     "openai": "^4.71.1",
     "pg": "^8.13.1",
+    "posthog-js": "^1.184.2",
+    "posthog-node": "^4.2.1",
     "react": "19.0.0-rc-7c8e5e7a-20241101",
     "react-dom": "19.0.0-rc-7c8e5e7a-20241101",
     "react-hook-form": "^7.53.2",

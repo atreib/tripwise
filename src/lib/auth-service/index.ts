@@ -23,7 +23,7 @@ async function sendMagicLink(email: string): Promise<void> {
   await getMagicLinkUtil().sendMagicLinkEmail(email, magicLinkUrl);
 }
 
-async function authenticateWithMagicLink(token: string): Promise<void> {
+async function authenticateWithMagicLink(token: string): Promise<User> {
   const magicLink = getMagicLinkUtil().validateMagicLinkToken(token);
   if (!magicLink) return redirect(UNAUTHENTICATED_REDIRECT_PATH);
   const email = magicLink.email;
@@ -48,6 +48,8 @@ async function authenticateWithMagicLink(token: string): Promise<void> {
   await cookieSessionUtils.createSession({
     userId: user.id,
   });
+
+  return user;
 }
 
 async function getAuthSession(): Promise<User["id"] | undefined> {
