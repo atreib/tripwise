@@ -34,7 +34,7 @@ export async function generateTranslation(props: {
       },
       {
         role: "system",
-        content: `Return only the translated text.`,
+        content: `Return only the translated text. Return only latin characters.`,
       },
     ],
     schema: z.object({

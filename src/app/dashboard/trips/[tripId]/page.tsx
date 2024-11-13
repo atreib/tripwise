@@ -113,14 +113,14 @@ export default async function TripPage({ params }: Props) {
         </CardContent>
       </Card>
 
-      <TabsOnUrl defaultValue="packing">
+      <TabsOnUrl defaultValue="attractions">
         <div className="w-full overflow-auto whitespace-nowrap">
           <TabsList>
+            <TabsTrigger value="attractions">Attractions</TabsTrigger>
+            <TabsTrigger value="food">Local Food</TabsTrigger>
+            <TabsTrigger value="etiquettes">Local Etiquettes</TabsTrigger>
             <TabsTrigger value="packing">Packing</TabsTrigger>
             <TabsTrigger value="documents">Documents</TabsTrigger>
-            <TabsTrigger value="etiquettes">Local Etiquettes</TabsTrigger>
-            <TabsTrigger value="food">Local Food</TabsTrigger>
-            <TabsTrigger value="attractions">Attractions</TabsTrigger>
           </TabsList>
         </div>
 
