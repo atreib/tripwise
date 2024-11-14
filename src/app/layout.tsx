@@ -36,7 +36,10 @@ export const metadata: Metadata = {
     ],
   },
   applicationName: appConstants.APP_NAME,
-  title: `${appConstants.APP_NAME} | Your AI-powered travel companion`,
+  title: {
+    template: "%s | " + appConstants.APP_NAME,
+    default: appConstants.APP_NAME + " | Your AI-powered travel companion",
+  },
   description: `${appConstants.APP_NAME} is your AI-powered travel companion. It helps you plan your next trip, find the best places to eat, and more.`,
   keywords: [
     appConstants.APP_NAME,

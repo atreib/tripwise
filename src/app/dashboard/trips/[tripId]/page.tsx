@@ -34,6 +34,7 @@ import {
 import { DocsCard } from "./docs-card.server";
 import { DocsCardSkeleton } from "./docs-card-skeleton.server";
 import { SmokeTestDialog } from "@/components/smoke-test";
+import { Metadata } from "next";
 
 // TODO: Revalidate ISR when we allow people to edit trips
 
@@ -50,6 +51,15 @@ export async function generateStaticParams() {
 type Props = {
   params: Promise<{ tripId: Trip["id"] }>;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { tripId } = await params;
+  await getAuthService().requireAuthSession();
+  const trip = await getTripsService().getTripById({ tripId });
+  return {
+    title: trip?.destination,
+  };
+}
 
 export default async function TripPage({ params }: Props) {
   const { tripId } = await params;

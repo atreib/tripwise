@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import { ButtonWithLoading } from "@/components/button-with-loading";
+import { Loader2Icon, TreePalmIcon } from "lucide-react";
 
 export async function LatestTrips() {
   const userId = await getAuthService().requireAuthSession();
@@ -19,9 +20,27 @@ export async function LatestTrips() {
     <>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 w-full">
         {trips.length === 0 ? (
-          <div className="grid col-span-full text-center text-sm text-muted-foreground">
-            No trips found.
-          </div>
+          <>
+            <div className="grid col-span-full mx-auto text-center text-sm text-muted-foreground">
+              It seems you haven&apos;t planned any trips yet...
+            </div>
+            <div className="grid col-span-full mx-auto text-center text-sm text-muted-foreground">
+              <ButtonWithLoading
+                asChild
+                fallback={
+                  <div className="flex items-center">
+                    <Loader2Icon className="w-4 h-4 mr-1 animate-spin" />
+                    Click here to create your first trip
+                  </div>
+                }
+              >
+                <Link href="/dashboard/trips?mode=new">
+                  <TreePalmIcon className="w-4 h-4 mr-1" />
+                  Click here to create your first trip
+                </Link>
+              </ButtonWithLoading>
+            </div>
+          </>
         ) : null}
         {trips.map((trip) => (
           <Card key={trip.id}>
@@ -42,13 +61,13 @@ export async function LatestTrips() {
           </Card>
         ))}
       </div>
-      <footer className="text-sm text-muted-foreground text-right">
-        <ButtonWithLoading variant="link" asChild>
-          <Link href="/dashboard/trips">
-            {trips.length === 0 ? "Plan your first trip" : "View all"}
-          </Link>
-        </ButtonWithLoading>
-      </footer>
+      {trips.length > 0 ? (
+        <footer className="text-sm text-muted-foreground text-right">
+          <ButtonWithLoading variant="link" asChild>
+            <Link href="/dashboard/trips">View all</Link>
+          </ButtonWithLoading>
+        </footer>
+      ) : null}
     </>
   );
 }

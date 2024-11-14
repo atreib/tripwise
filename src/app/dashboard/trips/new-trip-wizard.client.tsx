@@ -11,8 +11,6 @@ import {
   Palmtree,
   Wallet,
   Heart,
-  Check,
-  ChevronsUpDown,
   Loader2Icon,
   ClockIcon,
   TreePalmIcon,
@@ -26,24 +24,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import * as React from "react";
-import { cn } from "@/lib/utils";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { createTripAction } from "./actions";
 import { Trip } from "@/lib/trips-service/types";
 import LongLoading from "./long-loading.client";
 import { destinations } from "@/lib/destinations-service/destinations.client";
+import { DestinationSelector } from "./destination-selector.client";
 
 const steps = [
   {
@@ -87,10 +72,13 @@ const steps = [
   },
 ];
 
-export default function TripPlannerWizard() {
+type Props = {
+  defaultOpen?: boolean;
+};
+
+export default function TripPlannerWizard({ defaultOpen = false }: Props) {
   const [isLoading, setIsLoading] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [isDestinationsOpen, setIsDestinationsOpen] = useState(false);
+  const [open, setOpen] = useState(defaultOpen);
   const [error, setError] = useState<string>();
   const [currentStep, setCurrentStep] = useState(0);
   const [tripPlan, setTripPlan] = useState<
@@ -152,62 +140,11 @@ export default function TripPlannerWizard() {
     switch (step.id) {
       case "destination":
         return (
-          <Popover
-            open={isDestinationsOpen}
-            onOpenChange={setIsDestinationsOpen}
-          >
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                role="combobox"
-                aria-expanded={isDestinationsOpen}
-                className="w-full justify-between"
-              >
-                {tripPlan.destination
-                  ? destinations.find((dest) => dest === tripPlan.destination)
-                  : "Select destination..."}
-                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[317px] md:w-[454px] p-0">
-              <Command>
-                <CommandInput placeholder="Search destination..." />
-                <CommandList>
-                  <CommandEmpty>No framework found.</CommandEmpty>
-                  <CommandGroup>
-                    {destinations.map((dest) => (
-                      <CommandItem
-                        key={dest}
-                        value={dest}
-                        onSelect={(currentValue: string) => {
-                          setTripPlan({
-                            ...tripPlan,
-                            destination: currentValue,
-                          });
-                          setIsDestinationsOpen(false);
-                        }}
-                      >
-                        <Check
-                          className={cn(
-                            "mr-2 h-4 w-4",
-                            tripPlan.destination === dest
-                              ? "opacity-100"
-                              : "opacity-0"
-                          )}
-                        />
-                        {dest}
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                </CommandList>
-              </Command>
-            </PopoverContent>
-            <aside className="mt-4 text-sm text-muted-foreground">
-              Hey, I know we are missing a lot of cool places to go! We are
-              working on adding more destinations pretty soon. Thanks for your
-              patience!
-            </aside>
-          </Popover>
+          <DestinationSelector
+            destinations={destinations}
+            onSelect={(value) => handleInputChange("destination", value)}
+            selectedDestination={tripPlan.destination}
+          />
         );
       case "duration":
         return (

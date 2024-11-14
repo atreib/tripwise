@@ -88,9 +88,9 @@ export default async function LandingPage() {
                 </h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   {appConstants.APP_NAME} uses advanced AI algorithms to provide
-                  you with personalized travel recommendations, budget planning,
-                  and seamless itinerary generation, making your travel
-                  experience effortless and enjoyable.
+                  you personalized travel recommendations, budget planning, and
+                  seamless itinerary generation, making your travel experience
+                  effortless and enjoyable.
                 </p>
               </div>
             </div>
@@ -109,9 +109,8 @@ export default async function LandingPage() {
                       </h3>
                       <p className="text-muted-foreground">
                         {appConstants.APP_NAME} analyzes your preferences and
-                        travel history to provide you with tailored
-                        recommendations for destinations, accommodations, and
-                        activities.
+                        travel history to provide you tailored recommendations
+                        for destinations, accommodations, and activities.
                       </p>
                     </div>
                   </li>
