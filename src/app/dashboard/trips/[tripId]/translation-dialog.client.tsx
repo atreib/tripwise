@@ -88,7 +88,7 @@ export function TranslationDialog({
           ) : null}
         </DialogHeader>
         <section className="flex flex-col gap-4">
-          <div className="flex gap-2 items-start justify-start">
+          <div className="flex gap-2 items-start justify-start mt-2">
             <div>
               <LanguagesIcon
                 className={cn(
@@ -146,7 +146,7 @@ export function TranslationDialog({
             </Form>
           </div>
         </section>
-        <DialogFooter>
+        <DialogFooter className="flex flex-col-reverse gap-4 md:flex-row md:gap-0">
           <DialogClose asChild>
             <Button type="button" variant="outline">
               Close
