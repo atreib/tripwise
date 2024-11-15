@@ -262,14 +262,14 @@ export default async function LandingPage({ searchParams }: Props) {
         </p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
           <Link
-            href="#"
+            href="/privacy-policy"
             className="text-xs hover:underline underline-offset-4"
             prefetch={false}
           >
             Privacy Policy
           </Link>
           <Link
-            href="#"
+            href="/terms-of-service"
             className="text-xs hover:underline underline-offset-4"
             prefetch={false}
           >
