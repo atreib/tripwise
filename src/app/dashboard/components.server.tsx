@@ -3,6 +3,7 @@ import { appConstants } from "../constants";
 import { UserButton } from "@clerk/nextjs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Suspense } from "react";
+import { RoleBadge } from "./role-badge.server";
 
 export async function Navbar() {
   return (
@@ -25,7 +26,10 @@ export async function Navbar() {
               />
             </div>
           </div>
-          <div className="ml-6 flex items-center">
+          <div className="ml-6 flex items-center gap-2">
+            <Suspense fallback={null}>
+              <RoleBadge />
+            </Suspense>
             <Suspense fallback={<Skeleton className="h-8 w-8 rounded-full" />}>
               <UserButton />
             </Suspense>
