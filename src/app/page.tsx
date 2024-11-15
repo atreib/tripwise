@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/components/link";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { appConstants } from "./constants";
@@ -244,11 +244,19 @@ export default async function LandingPage({ searchParams }: Props) {
               <p className="text-xs">
                 By signing up, you agree to our{" "}
                 <Link
-                  href="#"
+                  href="/privacy-policy"
                   className="underline underline-offset-2"
                   prefetch={false}
                 >
-                  Terms &amp; Conditions
+                  Privacy Policy
+                </Link>{" "}
+                and{" "}
+                <Link
+                  href="/terms-of-service"
+                  className="underline underline-offset-2"
+                  prefetch={false}
+                >
+                  Terms of Service
                 </Link>
               </p>
             </div>

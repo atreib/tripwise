@@ -6,9 +6,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Link from "next/link";
-import { ButtonWithLoading } from "@/components/button-with-loading";
-import { Loader2Icon, TreePalmIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { LinkWithSpinner } from "@/components/link-with-spinner";
 
 export async function LatestTrips() {
   const userId = await getAuthService().requireAuthSession();
@@ -22,23 +21,14 @@ export async function LatestTrips() {
         {trips.length === 0 ? (
           <>
             <div className="grid col-span-full mx-auto text-center text-sm text-muted-foreground">
-              It seems you haven&apos;t planned any trips yet...
+              It seems you haven&apos;t planned any trips yet
             </div>
             <div className="grid col-span-full mx-auto text-center text-sm text-muted-foreground">
-              <ButtonWithLoading
-                asChild
-                fallback={
-                  <div className="flex items-center">
-                    <Loader2Icon className="w-4 h-4 mr-1 animate-spin" />
-                    Click here to create your first trip
-                  </div>
-                }
-              >
-                <Link href="/dashboard/trips?mode=new">
-                  <TreePalmIcon className="w-4 h-4 mr-1" />
+              <Button asChild>
+                <LinkWithSpinner href="/dashboard/trips?mode=new">
                   Click here to create your first trip
-                </Link>
-              </ButtonWithLoading>
+                </LinkWithSpinner>
+              </Button>
             </div>
           </>
         ) : null}
@@ -54,18 +44,20 @@ export async function LatestTrips() {
               </CardDescription>
             </CardHeader>
             <div className="flex justify-end p-4 pt-0">
-              <ButtonWithLoading variant="outline" asChild>
-                <Link href={`/dashboard/trips/${trip.id}`}>See more</Link>
-              </ButtonWithLoading>
+              <Button variant="outline" asChild>
+                <LinkWithSpinner href={`/dashboard/trips/${trip.id}`}>
+                  See more
+                </LinkWithSpinner>
+              </Button>
             </div>
           </Card>
         ))}
       </div>
       {trips.length > 0 ? (
         <footer className="text-sm text-muted-foreground text-right">
-          <ButtonWithLoading variant="link" asChild>
-            <Link href="/dashboard/trips">View all</Link>
-          </ButtonWithLoading>
+          <Button variant="link" asChild>
+            <LinkWithSpinner href="/dashboard/trips">View all</LinkWithSpinner>
+          </Button>
         </footer>
       ) : null}
     </>

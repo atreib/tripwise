@@ -95,10 +95,12 @@ export default function TripPlannerWizard({ defaultOpen = false }: Props) {
     if (isLoading) return;
     if (currentStep === steps.length - 1) return;
     setIsLoading(true);
+    let isCreating = false;
     try {
       if (currentStep < steps.length - 2) {
         setCurrentStep(currentStep + 1);
       } else {
+        isCreating = true;
         setCurrentStep(currentStep + 1);
         const res = await createTripAction({
           destination: tripPlan.destination,
@@ -112,9 +114,12 @@ export default function TripPlannerWizard({ defaultOpen = false }: Props) {
       }
     } catch (err) {
       const error = err as Error;
-      if (error.message !== "NEXT_REDIRECT") setError(error.message);
+      if (error.message !== "NEXT_REDIRECT") {
+        setError(error.message);
+        setIsLoading(false);
+      }
     } finally {
-      setIsLoading(false);
+      if (!isCreating) setIsLoading(false);
     }
   };
 
@@ -297,9 +302,15 @@ export default function TripPlannerWizard({ defaultOpen = false }: Props) {
             disabled={isLoading || !isStepComplete()}
           >
             {isLoading ? (
-              <Loader2Icon className="w-4 h-4 animate-spin mr-2" />
-            ) : null}
-            {currentStep === steps.length - 1 ? "Plan my trip" : "Next"}
+              <>
+                <Loader2Icon className="w-4 h-4 animate-spin mr-2" />
+                Planning your trip
+              </>
+            ) : currentStep === steps.length - 2 ? (
+              "Plan my trip"
+            ) : (
+              "Next"
+            )}
           </Button>
         </div>
       </DialogContent>

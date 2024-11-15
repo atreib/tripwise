@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  HomeIcon,
-  Loader2Icon,
-  MapPinIcon,
-  MessageCircleIcon,
-} from "lucide-react";
+import { HomeIcon, MapPinIcon, MessageCircleIcon } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -17,9 +12,10 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { appConstants } from "../constants";
-import { ButtonWithLoading } from "@/components/button-with-loading";
-import { usePathname } from "next/navigation";
 import { UserRole } from "@/lib/user-service/types";
+import { Button } from "@/components/ui/button";
+import { usePathname } from "next/navigation";
+import { LinkWithSpinner } from "@/components/link-with-spinner";
 
 export type SidebarItem = {
   title: string;
@@ -52,23 +48,20 @@ function SidebarButton({ item }: { item: SidebarItem }) {
   const pathname = usePathname();
 
   return (
-    <ButtonWithLoading
+    <Button
       variant="ghost"
+      className="w-full flex justify-start"
+      disabled={item.url === pathname}
       asChild
-      className="text-left flex items-center gap-2 justify-start cursor-pointer"
-      disableLoading={item.url === pathname}
-      fallback={
-        <div className="flex items-center gap-2">
-          <Loader2Icon className="animate-spin" />
-          <span>{item.title}</span>
-        </div>
-      }
     >
-      <a href={item.url}>
-        <item.icon />
+      <LinkWithSpinner
+        href={item.url}
+        className="flex items-center gap-2 justify-start"
+        icon={<item.icon />}
+      >
         <span>{item.title}</span>
-      </a>
-    </ButtonWithLoading>
+      </LinkWithSpinner>
+    </Button>
   );
 }
 

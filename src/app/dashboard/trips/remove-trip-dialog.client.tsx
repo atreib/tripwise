@@ -58,7 +58,7 @@ export function RemoveTripDialog({
             </aside>
           ) : null}
         </DialogHeader>
-        <DialogFooter>
+        <DialogFooter className="flex flex-col gap-2 md:flex-row md:gap-0">
           <DialogClose asChild>
             <Button
               type="button"

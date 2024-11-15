@@ -4,9 +4,8 @@ import { Button, ButtonProps } from "@/components/ui/button";
 import { UserButton } from "@clerk/nextjs";
 import { SignedIn } from "@clerk/nextjs";
 import { SignedOut, SignInButton } from "@clerk/nextjs";
-import Link from "next/link";
 import { appConstants } from "./constants";
-import { ButtonWithLoading } from "@/components/button-with-loading";
+import { LinkWithSpinner } from "@/components/link-with-spinner";
 
 type Props = {
   variant?: ButtonProps["variant"];
@@ -35,11 +34,11 @@ export async function GetStartedButton({
         {whenSignedIn?.useAvatarButton ? (
           <UserButton />
         ) : (
-          <ButtonWithLoading variant={variant} asChild>
-            <Link href={appConstants.AUTHENTICATED_REDIRECT_PATH}>
+          <Button variant={variant} asChild>
+            <LinkWithSpinner href={appConstants.AUTHENTICATED_REDIRECT_PATH}>
               Go to your dashboard
-            </Link>
-          </ButtonWithLoading>
+            </LinkWithSpinner>
+          </Button>
         )}
       </SignedIn>
     </>

@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import Link from "next/link";
+import { Link } from "@/components/link";
 import { ChevronRight } from "lucide-react";
 
 export function Breadcrumb() {

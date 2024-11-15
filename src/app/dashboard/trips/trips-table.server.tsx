@@ -10,10 +10,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { ButtonWithLoading } from "@/components/button-with-loading";
-import { EyeIcon, Loader2Icon, TrashIcon } from "lucide-react";
+import { EyeIcon, TrashIcon } from "lucide-react";
 import { RemoveTripDialog } from "./remove-trip-dialog.client";
+import { LinkWithSpinner } from "@/components/link-with-spinner";
 
 export async function TripsTable() {
   const userId = await getAuthService().requireAuthSession();
@@ -55,22 +54,17 @@ export async function TripsTable() {
               {trip.duration}
             </TableCell>
             <TableCell className="lg:w-[200px] flex gap-2 justify-end items-center">
-              <ButtonWithLoading
-                size="icon"
-                variant="outline"
-                fallback={
-                  <div>
-                    <Loader2Icon className="h-4 w-4 animate-spin" />
-                  </div>
-                }
-                asChild
-              >
-                <Link href={`/dashboard/trips/${trip.id}`}>
-                  <EyeIcon className="w-4 h-4" />
-                </Link>
-              </ButtonWithLoading>
+              <Button size="icon" variant="outline" asChild>
+                <LinkWithSpinner
+                  href={`/dashboard/trips/${trip.id}`}
+                  icon={<EyeIcon className="w-4 h-4" />}
+                >
+                  <span className="sr-only">Open trip</span>
+                </LinkWithSpinner>
+              </Button>
               <RemoveTripDialog tripId={trip.id}>
                 <Button variant="outline" size="icon">
+                  <span className="sr-only">Delete trip</span>
                   <TrashIcon className="w-4 h-4" />
                 </Button>
               </RemoveTripDialog>
