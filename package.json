@@ -8,10 +8,12 @@
     "start": "next start",
     "lint": "next lint",
     "migrate:latest": "kysely migrate latest",
-    "migrate:rollback": "kysely migrate up",
+    "migrate:up": "kysely migrate up",
+    "migrate:down": "kysely migrate down",
     "migrate:make": "kysely migrate make"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.3.4",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-accordion": "^1.2.1",
     "@radix-ui/react-avatar": "^1.1.1",

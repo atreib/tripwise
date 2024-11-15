@@ -3,7 +3,6 @@
 import {
   HomeIcon,
   Loader2Icon,
-  LogOutIcon,
   MapPinIcon,
   MessageCircleIcon,
 } from "lucide-react";
@@ -38,14 +37,6 @@ const items: SidebarItem[] = [
     title: "Trips",
     url: "/dashboard/trips",
     icon: MapPinIcon,
-  },
-];
-
-const accountItems: SidebarItem[] = [
-  {
-    title: "Log out",
-    url: appConstants.LOGOUT_PATH,
-    icon: LogOutIcon,
   },
 ];
 
@@ -96,20 +87,6 @@ export function AppSidebar({ role }: Props) {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <SidebarButton item={item} />
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <SidebarGroup>
-          <SidebarGroupLabel>Account</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {accountItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <SidebarButton item={item} />

@@ -2,14 +2,19 @@ import Link from "next/link";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { appConstants } from "./constants";
-import { DashboardOrGetStartedButton } from "./dashboard-or-get-started-btn.server";
-import { Suspense } from "react";
-import { GetStartedButton } from "./get-started-btn.server";
-import { FREE_TIER_LIMIT } from "@/lib/auth-service";
+import { GetStartedButton } from "./get-started-btn";
 
 export const experimental_ppr = true;
 
-export default async function LandingPage() {
+type Props = {
+  searchParams: Promise<{
+    message?: string;
+  }>;
+};
+
+export default async function LandingPage({ searchParams }: Props) {
+  const { message } = await searchParams;
+
   return (
     <div className="flex flex-col min-h-[100dvh]">
       <header className="px-4 lg:px-6 h-14 flex items-center fixed w-full bg-background/30 backdrop-blur-sm">
@@ -30,9 +35,10 @@ export default async function LandingPage() {
           <Button className="hidden lg:inline-block" variant="ghost" asChild>
             <Link href="/#testimonials">Testimonials</Link>
           </Button>
-          <Suspense fallback={<GetStartedButton label="Sign up" />}>
-            <DashboardOrGetStartedButton label="Sign up" />
-          </Suspense>
+          <GetStartedButton
+            label="Sign up"
+            whenSignedIn={{ useAvatarButton: true }}
+          />
         </nav>
       </header>
       <main className="flex-1 ">
@@ -55,15 +61,18 @@ export default async function LandingPage() {
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row mx-auto lg:mx-0">
-                  <Suspense
-                    fallback={<GetStartedButton label="Plan your next trip" />}
-                  >
-                    <DashboardOrGetStartedButton label="Plan your next trip" />
-                  </Suspense>
+                  <GetStartedButton label="Plan your next trip" />
                 </div>
-                <aside className="text-sm text-muted-foreground animate-pulse text-center lg:text-left">
-                  Free for the first {FREE_TIER_LIMIT} users, hurry up!
-                </aside>
+                {message ? (
+                  <aside className="text-base text-destructive text-center lg:text-left">
+                    {message}
+                  </aside>
+                ) : (
+                  <aside className="text-sm text-muted-foreground animate-pulse text-center lg:text-left">
+                    Free for the first {appConstants.FREE_TIER_LIMIT} users,
+                    hurry up!
+                  </aside>
+                )}
               </div>
               <img
                 src="/assets/man-enjoying-travel-planned-using-tripwise.png"
@@ -230,16 +239,7 @@ export default async function LandingPage() {
             </div>
             <div className="mx-auto w-full max-w-sm space-y-2">
               <form className="flex py-2 mx-auto justify-center items-center">
-                <Suspense
-                  fallback={
-                    <GetStartedButton variant="secondary" label="Get started" />
-                  }
-                >
-                  <DashboardOrGetStartedButton
-                    variant="secondary"
-                    label="Get started"
-                  />
-                </Suspense>
+                <GetStartedButton label="Get started" variant="secondary" />
               </form>
               <p className="text-xs">
                 By signing up, you agree to our{" "}

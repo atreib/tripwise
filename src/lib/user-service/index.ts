@@ -26,22 +26,48 @@ async function getUserById(id: string): Promise<User | undefined> {
   return userSchema.parse(user);
 }
 
-async function getUserByIdOrThrow(id: string): Promise<User> {
+async function requireUserById(id: string): Promise<User> {
   const user = await getUserById(id);
-  if (!user) throw new Error("User not found");
+  if (!user) return redirect(appConstants.UNAUTHENTICATED_REDIRECT_PATH);
   return user;
 }
 
-async function createUser(user: Omit<User, "id">): Promise<User> {
+async function createUser(
+  user: Omit<User, "id"> & Partial<Pick<User, "id">>
+): Promise<User> {
   const newUser = await db
     .insertInto("user")
     .values({
       ...user,
-      id: v4(),
+      id: user.id ?? v4(),
     })
     .returningAll()
     .executeTakeFirstOrThrow();
   return userSchema.parse(newUser);
+}
+
+async function updateUser(
+  id: User["id"],
+  attrs: Partial<Omit<User, "id">>
+): Promise<User> {
+  const updatedUser = await db
+    .updateTable("user")
+    .set(attrs)
+    .where("id", "=", id)
+    .returningAll()
+    .executeTakeFirstOrThrow();
+  return userSchema.parse(updatedUser);
+}
+
+async function changeUserId(
+  oldId: User["id"],
+  newId: User["id"]
+): Promise<void> {
+  await db
+    .updateTable("user")
+    .set({ id: newId })
+    .where("id", "=", oldId)
+    .execute();
 }
 
 async function getTotalUsers(): Promise<number> {
@@ -61,11 +87,13 @@ async function requireBetaAccess(userId: string): Promise<User> {
 
 export function getUserService() {
   return {
-    getUserByIdOrThrow,
+    requireUserById,
     getUserByEmail,
     getUserById,
     createUser,
+    updateUser,
     getTotalUsers,
     requireBetaAccess,
+    changeUserId,
   };
 }

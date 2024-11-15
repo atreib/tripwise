@@ -4,7 +4,7 @@ import { getUserService } from "@/lib/user-service";
 
 export async function AppSidebar() {
   const userId = await getAuthService().requireAuthSession();
-  const user = await getUserService().getUserByIdOrThrow(userId);
+  const user = await getUserService().requireUserById(userId);
 
   return <AppSidebarClient role={user.role} />;
 }

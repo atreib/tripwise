@@ -1,6 +1,6 @@
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { appConstants } from "../constants";
-import { UserAvatar } from "./user-avatar.server";
+import { UserButton } from "@clerk/nextjs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Suspense } from "react";
 
@@ -27,7 +27,7 @@ export async function Navbar() {
           </div>
           <div className="ml-6 flex items-center">
             <Suspense fallback={<Skeleton className="h-8 w-8 rounded-full" />}>
-              <UserAvatar />
+              <UserButton />
             </Suspense>
           </div>
         </div>

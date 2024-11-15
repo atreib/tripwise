@@ -7,6 +7,7 @@ import { NavigationFeedback } from "./navigation-feedback";
 import { Suspense } from "react";
 import { PosthogProvider } from "@/lib/analytics-service/components/posthog-provider.client";
 import { PageView } from "@/lib/analytics-service/components/pageview.client";
+import AuthProvider from "@/lib/auth-service/provider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -69,21 +70,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <PosthogProvider>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          {children}
-          <Suspense fallback={null}>
-            <PageView />
-          </Suspense>
-          <Suspense fallback={null}>
-            <NavigationFeedback />
-          </Suspense>
-          <Toaster />
-        </body>
-      </PosthogProvider>
-    </html>
+    <AuthProvider>
+      <html lang="en">
+        <PosthogProvider>
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          >
+            {children}
+            <Suspense fallback={null}>
+              <PageView />
+            </Suspense>
+            <Suspense fallback={null}>
+              <NavigationFeedback />
+            </Suspense>
+            <Toaster />
+          </body>
+        </PosthogProvider>
+      </html>
+    </AuthProvider>
   );
 }
