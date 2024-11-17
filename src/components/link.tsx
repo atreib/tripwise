@@ -22,7 +22,7 @@ export function Link({ children, ...props }: NextLinkProps) {
   }, []);
 
   return (
-    <LinkComponent {...props} href={props.href.toString()}>
+    <LinkComponent {...props} href={props.href.toString()} prefetch={false}>
       {children}
     </LinkComponent>
   );
