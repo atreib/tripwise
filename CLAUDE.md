@@ -59,6 +59,10 @@ The codebase follows a **service-oriented architecture** with all business logic
   - Uses OpenAI to generate trip data (summaries, packing lists, points of interest, etc.)
   - All AI prompts are in `prompts/` subdirectory
   - Handles trip CRUD operations and related data (packing lists, documents, local food, etiquettes, attractions)
+- **`backpack-service/`** - Backpack management (unrelated to trips)
+  - Handles backpack CRUD operations and item management
+  - Users can create multiple backpacks with items (simple string lists)
+  - Supports add, update, delete operations for both backpacks and items
 - **`auth-service/`** - Authentication via Clerk
   - `getAuthSession()` - Returns userId or undefined
   - `requireAuthSession()` - Returns userId or redirects to login
@@ -97,6 +101,8 @@ Key tables:
 - `trip_local_etiquette` - Cultural etiquette tips per trip
 - `trip_local_food` - Food recommendations per trip
 - `trip_points_of_interest` - Attractions and POIs per trip
+- `backpack` - User-created backpacks with name and created_at timestamp
+- `backpack_item` - Items within backpacks (simple string items)
 - `user` - User profiles with role field (beta, staff, or regular)
 - `feedback` - Beta user feedback
 
