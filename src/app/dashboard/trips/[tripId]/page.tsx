@@ -35,6 +35,7 @@ import { DocsCard } from "./docs-card.server";
 import { DocsCardSkeleton } from "./docs-card-skeleton.server";
 import { SmokeTestDialog } from "@/components/smoke-test";
 import { Metadata } from "next";
+import { TripDates } from "./trip-dates.client";
 
 // TODO: Revalidate ISR when we allow people to edit trips
 
@@ -124,6 +125,7 @@ export default async function TripPage({ params }: Props) {
               <p>{trip.budget}</p>
               <p>{trip.purpose}</p>
             </div>
+            <TripDates trip={trip} />
             <Accordion type="single" collapsible>
               <AccordionItem value="summary">
                 <AccordionTrigger className="hover:no-underline text-muted-foreground text-lg">
