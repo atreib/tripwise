@@ -1,6 +1,6 @@
 "use client";
 
-import { HomeIcon, MapPinIcon, MessageCircleIcon } from "lucide-react";
+import { HomeIcon, MapPinIcon, MessageCircleIcon, BackpackIcon } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -33,6 +33,11 @@ const items: SidebarItem[] = [
     title: "Trips",
     url: "/dashboard/trips",
     icon: MapPinIcon,
+  },
+  {
+    title: "Backpacks",
+    url: "/dashboard/backpacks",
+    icon: BackpackIcon,
   },
 ];
 

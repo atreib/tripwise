@@ -9,6 +9,8 @@ export interface Database {
   trip_local_food: TripLocalFoodTable;
   trip_points_of_interest: TripPointsOfInterestTable;
   feedback: FeedbackTable;
+  backpack: BackpackTable;
+  backpack_item: BackpackItemTable;
 }
 
 export interface UserTable {
@@ -71,4 +73,18 @@ export interface FeedbackTable {
   userId: string;
   message: string;
   createdAt: ColumnType<Date, string | undefined, never>;
+}
+
+export interface BackpackTable {
+  id: string;
+  userId: string;
+  name: string;
+  created_at: ColumnType<Date, string | undefined, never>;
+}
+
+export interface BackpackItemTable {
+  id: string;
+  backpackId: string;
+  item: string;
+  order: number;
 }
