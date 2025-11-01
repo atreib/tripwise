@@ -119,11 +119,14 @@ async function updateTripFoodRecommendations(props: { trip: Trip }) {
 }
 
 async function createTrip(props: { trip: Omit<Trip, "id" | "created_at"> }) {
+  const { departure_date, return_date, ...tripData } = props.trip;
   const newTrip = await db
     .insertInto("trip")
     .values({
-      ...props.trip,
+      ...tripData,
       id: v4(),
+      departure_date: departure_date ? departure_date.toISOString() : null,
+      return_date: return_date ? return_date.toISOString() : null,
     })
     .returningAll()
     .executeTakeFirstOrThrow();
@@ -216,6 +219,21 @@ async function getTripsByUserId(props: { userId: string }) {
 
 async function deleteTrip(props: { tripId: string }) {
   await db.deleteFrom("trip").where("id", "=", props.tripId).execute();
+}
+
+async function updateTripDates(props: {
+  tripId: string;
+  departureDate: Date | null;
+  returnDate: Date | null;
+}) {
+  await db
+    .updateTable("trip")
+    .set({
+      departure_date: props.departureDate ? props.departureDate.toISOString() : null,
+      return_date: props.returnDate ? props.returnDate.toISOString() : null,
+    })
+    .where("id", "=", props.tripId)
+    .execute();
 }
 
 // TODO: Add caching + revalidation to decrease Vercel compute time
@@ -404,6 +422,7 @@ export function getTripsService() {
     getTripPointsOfInterest,
     getTripsByUserId,
     deleteTrip,
+    updateTripDates,
     getLatestFewTripByUserId,
     getAllTrips,
     translateText,
