@@ -4,6 +4,7 @@ export interface Database {
   user: UserTable;
   trip: TripTable;
   trip_packing_list: TripPackingListTable;
+  trip_backpack_item: TripBackpackItemTable;
   trip_documents: TripDocumentsTable;
   trip_local_etiquette: TripLocalEtiquetteTable;
   trip_local_food: TripLocalFoodTable;
@@ -87,4 +88,12 @@ export interface BackpackItemTable {
   backpackId: string;
   item: string;
   order: number;
+}
+
+export interface TripBackpackItemTable {
+  id: string;
+  tripId: string;
+  item: string;
+  order: number;
+  packed: boolean;
 }

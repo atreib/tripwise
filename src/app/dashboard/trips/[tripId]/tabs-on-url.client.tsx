@@ -16,6 +16,11 @@ export function TabsOnUrl({
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
+  // Initialize tab from URL or fallback to defaultValue
+  const [currentTab, setCurrentTab] = React.useState(() =>
+    searchParams.get("tab") || defaultValue
+  );
+
   const createQueryString = React.useCallback(
     (value: string) => {
       const params = new URLSearchParams(searchParams.toString());
@@ -26,13 +31,14 @@ export function TabsOnUrl({
   );
 
   function handleTabChange(tab: string) {
+    setCurrentTab(tab);
     router.push(pathname + "?" + createQueryString(tab), { scroll: false });
   }
 
   return (
     <Tabs
+      value={currentTab}
       onValueChange={handleTabChange}
-      defaultValue={defaultValue}
       className="w-full overflow-auto"
     >
       {children}

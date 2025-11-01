@@ -11,6 +11,7 @@ import {
   tripPackingListSchema,
   tripPointsOfInterestSchema,
   tripSchema,
+  tripBackpackItemSchema,
 } from "./types";
 import { v4 } from "uuid";
 import { generateTripSummary } from "./prompts/generate-trip-summary";
@@ -251,6 +252,147 @@ async function getDestinationCurrentExchangeRate(props: {
   });
 }
 
+// Trip Backpack Methods
+async function hasTripBackpack(props: { tripId: string }): Promise<boolean> {
+  const item = await db
+    .selectFrom("trip_backpack_item")
+    .select("id")
+    .where("tripId", "=", props.tripId)
+    .limit(1)
+    .executeTakeFirst();
+  return !!item;
+}
+
+async function createTripBackpackFromBackpack(props: {
+  tripId: string;
+  backpackId: string;
+}) {
+  // Delete AI-generated packing list
+  await db
+    .deleteFrom("trip_packing_list")
+    .where("tripId", "=", props.tripId)
+    .execute();
+
+  // Get backpack items
+  const backpackItems = await db
+    .selectFrom("backpack_item")
+    .selectAll()
+    .where("backpackId", "=", props.backpackId)
+    .orderBy("order", "asc")
+    .execute();
+
+  // Clone items to trip backpack
+  await Promise.all(
+    backpackItems.map((item) =>
+      db
+        .insertInto("trip_backpack_item")
+        .values({
+          id: v4(),
+          tripId: props.tripId,
+          item: item.item,
+          order: item.order,
+          packed: false,
+        })
+        .execute()
+    )
+  );
+}
+
+async function createEmptyTripBackpack(props: { tripId: string }) {
+  // Delete AI-generated packing list
+  await db
+    .deleteFrom("trip_packing_list")
+    .where("tripId", "=", props.tripId)
+    .execute();
+
+  // Delete existing trip backpack items if any
+  await db
+    .deleteFrom("trip_backpack_item")
+    .where("tripId", "=", props.tripId)
+    .execute();
+}
+
+async function getTripBackpackItems(props: { tripId: string }) {
+  const items = await db
+    .selectFrom("trip_backpack_item")
+    .selectAll()
+    .where("tripId", "=", props.tripId)
+    .orderBy("order", "asc")
+    .execute();
+  return tripBackpackItemSchema.array().parse(items);
+}
+
+async function addTripBackpackItem(props: { tripId: string; item: string }) {
+  // Get the current max order for this trip backpack
+  const result = await db
+    .selectFrom("trip_backpack_item")
+    .select(({ fn }) => fn.max("order").as("maxOrder"))
+    .where("tripId", "=", props.tripId)
+    .executeTakeFirst();
+
+  const nextOrder = result?.maxOrder != null ? result.maxOrder + 1 : 0;
+
+  const newItem = await db
+    .insertInto("trip_backpack_item")
+    .values({
+      id: v4(),
+      tripId: props.tripId,
+      item: props.item,
+      order: nextOrder,
+      packed: false,
+    })
+    .returningAll()
+    .executeTakeFirstOrThrow();
+
+  return tripBackpackItemSchema.parse(newItem);
+}
+
+async function updateTripBackpackItem(props: { itemId: string; item: string }) {
+  const updatedItem = await db
+    .updateTable("trip_backpack_item")
+    .set({ item: props.item })
+    .where("id", "=", props.itemId)
+    .returningAll()
+    .executeTakeFirstOrThrow();
+
+  return tripBackpackItemSchema.parse(updatedItem);
+}
+
+async function deleteTripBackpackItem(props: { itemId: string }) {
+  await db
+    .deleteFrom("trip_backpack_item")
+    .where("id", "=", props.itemId)
+    .execute();
+}
+
+async function reorderTripBackpackItems(props: {
+  items: Array<{ id: string; order: number }>;
+}) {
+  await Promise.all(
+    props.items.map((item) =>
+      db
+        .updateTable("trip_backpack_item")
+        .set({ order: item.order })
+        .where("id", "=", item.id)
+        .execute()
+    )
+  );
+}
+
+async function toggleTripBackpackItemPacked(props: {
+  itemId: string;
+  packed: boolean;
+}) {
+  const updatedItem = await db
+    .updateTable("trip_backpack_item")
+    .set({ packed: props.packed })
+    .where("id", "=", props.itemId)
+    .returningAll()
+    .executeTakeFirstOrThrow();
+
+  return tripBackpackItemSchema.parse(updatedItem);
+}
+
 export function getTripsService() {
   return {
     createTrip,
@@ -266,5 +408,15 @@ export function getTripsService() {
     getAllTrips,
     translateText,
     getDestinationCurrentExchangeRate,
+    // Trip Backpack
+    hasTripBackpack,
+    createTripBackpackFromBackpack,
+    createEmptyTripBackpack,
+    getTripBackpackItems,
+    addTripBackpackItem,
+    updateTripBackpackItem,
+    deleteTripBackpackItem,
+    reorderTripBackpackItems,
+    toggleTripBackpackItemPacked,
   };
 }

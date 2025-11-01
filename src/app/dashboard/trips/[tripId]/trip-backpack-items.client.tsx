@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   PlusIcon,
   Trash2Icon,
@@ -12,13 +13,14 @@ import {
   XIcon,
   GripVerticalIcon,
 } from "lucide-react";
-import type { BackpackItem } from "@/lib/backpack-service/types";
+import type { TripBackpackItem } from "@/lib/trips-service/types";
 import {
-  addItemAction,
-  updateItemAction,
-  deleteItemAction,
-  reorderItemsAction,
-} from "../actions";
+  addTripBackpackItemAction,
+  updateTripBackpackItemAction,
+  deleteTripBackpackItemAction,
+  reorderTripBackpackItemsAction,
+  togglePackedAction,
+} from "./actions";
 import {
   DndContext,
   closestCenter,
@@ -38,12 +40,12 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 
 type Props = {
-  backpackId: string;
-  initialItems: BackpackItem[];
+  tripId: string;
+  initialItems: TripBackpackItem[];
 };
 
 type SortableItemProps = {
-  item: BackpackItem;
+  item: TripBackpackItem;
   isEditing: boolean;
   editingText: string;
   onStartEdit: () => void;
@@ -51,6 +53,7 @@ type SortableItemProps = {
   onUpdateItem: (id: string, text: string) => void;
   onDeleteItem: (id: string) => void;
   onEditTextChange: (text: string) => void;
+  onTogglePacked: (id: string, packed: boolean) => void;
 };
 
 function SortableItem({
@@ -62,6 +65,7 @@ function SortableItem({
   onUpdateItem,
   onDeleteItem,
   onEditTextChange,
+  onTogglePacked,
 }: SortableItemProps) {
   const {
     attributes,
@@ -94,6 +98,15 @@ function SortableItem({
         </button>
       )}
 
+      {!isEditing && (
+        <Checkbox
+          checked={item.packed}
+          onCheckedChange={(checked) =>
+            onTogglePacked(item.id, checked === true)
+          }
+        />
+      )}
+
       {isEditing ? (
         <>
           <Input
@@ -122,7 +135,13 @@ function SortableItem({
         </>
       ) : (
         <>
-          <span className="flex-1">{item.item}</span>
+          <span
+            className={`flex-1 ${
+              item.packed ? "line-through text-muted-foreground" : ""
+            }`}
+          >
+            {item.item}
+          </span>
           <Button size="icon" variant="ghost" onClick={onStartEdit}>
             <PencilIcon className="w-4 h-4" />
           </Button>
@@ -139,8 +158,8 @@ function SortableItem({
   );
 }
 
-export function BackpackItems({ backpackId, initialItems }: Props) {
-  const [items, setItems] = useState<BackpackItem[]>(initialItems);
+export function TripBackpackItems({ tripId, initialItems }: Props) {
+  const [items, setItems] = useState<TripBackpackItem[]>(initialItems);
   const [newItemText, setNewItemText] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingText, setEditingText] = useState("");
@@ -158,26 +177,25 @@ export function BackpackItems({ backpackId, initialItems }: Props) {
 
     // Optimistic update
     const tempId = `temp-${Date.now()}`;
-    const optimisticItem: BackpackItem = {
+    const optimisticItem: TripBackpackItem = {
       id: tempId,
-      backpackId,
+      tripId,
       item: text,
       order: items.length,
+      packed: false,
     };
     setItems((prev) => [...prev, optimisticItem]);
     setNewItemText("");
 
     try {
-      const res = await addItemAction({ backpackId, item: text });
+      const res = await addTripBackpackItemAction({ tripId, item: text });
       if (res?.serverError) throw new Error(res.serverError);
       if (res?.data) {
-        // Replace optimistic item with real one
         setItems((prev) =>
           prev.map((item) => (item.id === tempId ? res.data! : item))
         );
       }
     } catch (err) {
-      // Rollback on error
       setItems((prev) => prev.filter((item) => item.id !== tempId));
       console.error("Failed to add item:", err);
     }
@@ -187,7 +205,6 @@ export function BackpackItems({ backpackId, initialItems }: Props) {
     const text = newText.trim();
     if (!text) return;
 
-    // Optimistic update
     const oldItems = items;
     setItems((prev) =>
       prev.map((item) => (item.id === itemId ? { ...item, item: text } : item))
@@ -195,27 +212,39 @@ export function BackpackItems({ backpackId, initialItems }: Props) {
     setEditingId(null);
 
     try {
-      const res = await updateItemAction({ id: itemId, item: text });
+      const res = await updateTripBackpackItemAction({ id: itemId, item: text });
       if (res?.serverError) throw new Error(res.serverError);
     } catch (err) {
-      // Rollback on error
       setItems(oldItems);
       console.error("Failed to update item:", err);
     }
   }
 
   async function handleDeleteItem(itemId: string) {
-    // Optimistic update
     const oldItems = items;
     setItems((prev) => prev.filter((item) => item.id !== itemId));
 
     try {
-      const res = await deleteItemAction({ id: itemId });
+      const res = await deleteTripBackpackItemAction({ id: itemId });
       if (res?.serverError) throw new Error(res.serverError);
     } catch (err) {
-      // Rollback on error
       setItems(oldItems);
       console.error("Failed to delete item:", err);
+    }
+  }
+
+  async function handleTogglePacked(itemId: string, packed: boolean) {
+    const oldItems = items;
+    setItems((prev) =>
+      prev.map((item) => (item.id === itemId ? { ...item, packed } : item))
+    );
+
+    try {
+      const res = await togglePackedAction({ id: itemId, packed });
+      if (res?.serverError) throw new Error(res.serverError);
+    } catch (err) {
+      setItems(oldItems);
+      console.error("Failed to toggle packed:", err);
     }
   }
 
@@ -230,7 +259,6 @@ export function BackpackItems({ backpackId, initialItems }: Props) {
     const oldIndex = items.findIndex((item) => item.id === active.id);
     const newIndex = items.findIndex((item) => item.id === over.id);
 
-    // Optimistic update
     const newItems = arrayMove(items, oldIndex, newIndex);
     const reorderedItems = newItems.map((item, index) => ({
       ...item,
@@ -239,20 +267,18 @@ export function BackpackItems({ backpackId, initialItems }: Props) {
     setItems(reorderedItems);
 
     try {
-      // Save to server
-      const res = await reorderItemsAction({
-        backpackId,
+      const res = await reorderTripBackpackItemsAction({
+        tripId,
         items: reorderedItems.map((item) => ({ id: item.id, order: item.order })),
       });
       if (res?.serverError) throw new Error(res.serverError);
     } catch (err) {
-      // Rollback on error
       setItems(oldItems);
       console.error("Failed to reorder items:", err);
     }
   }
 
-  function startEditing(item: BackpackItem) {
+  function startEditing(item: TripBackpackItem) {
     setEditingId(item.id);
     setEditingText(item.item);
   }
@@ -265,11 +291,10 @@ export function BackpackItems({ backpackId, initialItems }: Props) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Items</CardTitle>
+        <CardTitle>Trip Packing List</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {/* Items list */}
           {items.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-8">
               No items yet. Add your first item below!
@@ -296,6 +321,7 @@ export function BackpackItems({ backpackId, initialItems }: Props) {
                       onUpdateItem={handleUpdateItem}
                       onDeleteItem={handleDeleteItem}
                       onEditTextChange={setEditingText}
+                      onTogglePacked={handleTogglePacked}
                     />
                   ))}
                 </div>
@@ -303,7 +329,6 @@ export function BackpackItems({ backpackId, initialItems }: Props) {
             </DndContext>
           )}
 
-          {/* Add new item */}
           <div className="flex gap-2">
             <Input
               placeholder="Add a new item..."
