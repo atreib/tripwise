@@ -62,3 +62,12 @@ export const tripPointsOfInterestSchema = z.object({
   description: z.string(),
 });
 export type TripPointsOfInterest = z.output<typeof tripPointsOfInterestSchema>;
+
+export const tripBackpackItemSchema = z.object({
+  id: z.string().uuid(),
+  tripId: z.string().uuid(),
+  item: z.string().min(1),
+  order: z.number().int().min(0),
+  packed: z.boolean(),
+});
+export type TripBackpackItem = z.output<typeof tripBackpackItemSchema>;
