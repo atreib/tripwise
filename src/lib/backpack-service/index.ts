@@ -37,6 +37,17 @@ async function getBackpacksByUserId(props: { userId: string }) {
   return backpackSchema.array().parse(backpacks);
 }
 
+async function updateBackpack(props: { backpackId: string; name: string }) {
+  const updatedBackpack = await db
+    .updateTable("backpack")
+    .set({ name: props.name })
+    .where("id", "=", props.backpackId)
+    .returningAll()
+    .executeTakeFirstOrThrow();
+
+  return backpackSchema.parse(updatedBackpack);
+}
+
 async function deleteBackpack(props: { backpackId: string }) {
   await db.deleteFrom("backpack").where("id", "=", props.backpackId).execute();
 }
@@ -113,6 +124,7 @@ export function getBackpackService() {
     createBackpack,
     getBackpackById,
     getBackpacksByUserId,
+    updateBackpack,
     deleteBackpack,
     getBackpackItems,
     addItem,

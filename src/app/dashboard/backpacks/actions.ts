@@ -21,6 +21,18 @@ export const createBackpackAction = authenticatedActionClient
     return createdBackpack;
   });
 
+export const updateBackpackAction = authenticatedActionClient
+  .schema(backpackSchema.pick({ id: true, name: true }))
+  .action(async ({ parsedInput: { id, name } }) => {
+    const updatedBackpack = await getBackpackService().updateBackpack({
+      backpackId: id,
+      name,
+    });
+    revalidatePath(`/dashboard/backpacks/${id}`);
+    revalidatePath("/dashboard/backpacks");
+    return updatedBackpack;
+  });
+
 export const deleteBackpackAction = authenticatedActionClient
   .schema(backpackSchema.pick({ id: true }))
   .action(async ({ parsedInput: { id } }) => {

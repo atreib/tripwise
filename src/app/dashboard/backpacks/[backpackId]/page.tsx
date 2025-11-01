@@ -2,6 +2,7 @@ import { getAuthService } from "@/lib/auth-service";
 import { getBackpackService } from "@/lib/backpack-service";
 import { notFound } from "next/navigation";
 import { BackpackItems } from "./backpack-items.client";
+import { EditBackpackDialog } from "./edit-backpack-dialog.client";
 import { Metadata } from "next";
 
 export const experimental_ppr = true;
@@ -43,7 +44,13 @@ export default async function BackpackPage({ params }: Props) {
   return (
     <div className="w-full flex flex-col gap-4">
       <header>
-        <h1 className="text-2xl font-bold">{backpack.name}</h1>
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-bold">{backpack.name}</h1>
+          <EditBackpackDialog
+            backpackId={backpackId}
+            currentName={backpack.name}
+          />
+        </div>
         <p className="text-sm text-muted-foreground">
           Created on {new Date(backpack.created_at).toLocaleDateString()}
         </p>
