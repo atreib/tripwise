@@ -17,6 +17,27 @@ export const translateTextAction = authenticatedActionClient
     return getTripsService().translateText(parsedInput);
   });
 
+export const updateTripDatesAction = authenticatedActionClient
+  .schema(
+    z.object({
+      tripId: z.string().uuid(),
+      departureDate: z.string().nullable(),
+      returnDate: z.string().nullable(),
+    })
+  )
+  .action(async ({ parsedInput }) => {
+    await getTripsService().updateTripDates({
+      tripId: parsedInput.tripId,
+      departureDate: parsedInput.departureDate
+        ? new Date(parsedInput.departureDate)
+        : null,
+      returnDate: parsedInput.returnDate
+        ? new Date(parsedInput.returnDate)
+        : null,
+    });
+    revalidatePath(`/dashboard/trips/${parsedInput.tripId}`);
+  });
+
 // Trip Backpack Actions
 export const createTripBackpackFromBackpackAction = authenticatedActionClient
   .schema(

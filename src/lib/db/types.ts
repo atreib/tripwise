@@ -30,6 +30,8 @@ export interface TripTable {
   budget: "luxury" | "moderate" | "low budget";
   purpose: "business" | "leisure" | "romantic getaway" | "family" | "adventure";
   duration: "days" | "weeks" | "months";
+  departure_date?: ColumnType<Date | null, string | null | undefined, string | null | undefined>;
+  return_date?: ColumnType<Date | null, string | null | undefined, string | null | undefined>;
   summary?: string;
   currency?: string;
   dailyCost?: number;

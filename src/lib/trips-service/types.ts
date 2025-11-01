@@ -14,6 +14,8 @@ export const tripSchema = z.object({
     "adventure",
   ]),
   duration: z.enum(["days", "weeks", "months"]),
+  departure_date: z.coerce.date().nullable().optional(),
+  return_date: z.coerce.date().nullable().optional(),
   created_at: z.coerce.date(),
 });
 export type Trip = z.output<typeof tripSchema>;
