@@ -295,25 +295,9 @@ export function TripBackpackItems({ tripId, initialItems }: Props) {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          <div className="flex gap-2">
-            <Input
-              placeholder="Add a new item..."
-              value={newItemText}
-              onChange={(e) => setNewItemText(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleAddItem();
-                }
-              }}
-            />
-            <Button onClick={handleAddItem} size="icon">
-              <PlusIcon className="w-4 h-4" />
-            </Button>
-          </div>
-
           {items.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-8">
-              No items yet. Add your first item above!
+              No items yet. Add your first item below!
             </p>
           ) : (
             <DndContext
@@ -344,6 +328,22 @@ export function TripBackpackItems({ tripId, initialItems }: Props) {
               </SortableContext>
             </DndContext>
           )}
+
+          <div className="flex gap-2">
+            <Input
+              placeholder="Add a new item..."
+              value={newItemText}
+              onChange={(e) => setNewItemText(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleAddItem();
+                }
+              }}
+            />
+            <Button onClick={handleAddItem} size="icon">
+              <PlusIcon className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
