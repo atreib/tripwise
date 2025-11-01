@@ -13,6 +13,32 @@ import { Button } from "@/components/ui/button";
 import { EyeIcon, TrashIcon } from "lucide-react";
 import { RemoveTripDialog } from "./remove-trip-dialog.client";
 import { LinkWithSpinner } from "@/components/link-with-spinner";
+import { format } from "date-fns";
+
+function formatTripDates(
+  departureDate: Date | null | undefined,
+  returnDate: Date | null | undefined
+): string {
+  if (!departureDate && !returnDate) {
+    return "Not set";
+  }
+
+  if (departureDate && returnDate) {
+    const departure = new Date(departureDate);
+    const returnD = new Date(returnDate);
+    return `${format(departure, "MMM d")} - ${format(returnD, "MMM d, yyyy")}`;
+  }
+
+  if (departureDate) {
+    return `From ${format(new Date(departureDate), "MMM d, yyyy")}`;
+  }
+
+  if (returnDate) {
+    return `Until ${format(new Date(returnDate), "MMM d, yyyy")}`;
+  }
+
+  return "Not set";
+}
 
 export async function TripsTable() {
   const userId = await getAuthService().requireAuthSession();
@@ -24,6 +50,9 @@ export async function TripsTable() {
       <TableHeader>
         <TableRow>
           <TableHead>Destination</TableHead>
+          <TableHead className="w-[180px] hidden lg:table-cell">
+            Dates
+          </TableHead>
           <TableHead className="w-[100px] hidden lg:table-cell">
             Season
           </TableHead>
@@ -47,6 +76,9 @@ export async function TripsTable() {
         {trips.map((trip) => (
           <TableRow key={trip.id}>
             <TableCell className="font-medium">{trip.destination}</TableCell>
+            <TableCell className="w-[180px] hidden lg:table-cell">
+              {formatTripDates(trip.departure_date, trip.return_date)}
+            </TableCell>
             <TableCell className="w-[100px] hidden lg:table-cell">
               {trip.season}
             </TableCell>
