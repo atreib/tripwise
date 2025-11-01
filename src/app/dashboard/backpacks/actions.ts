@@ -5,6 +5,7 @@ import { authenticatedActionClient } from "@/lib/safe-actions";
 import { backpackSchema, backpackItemSchema } from "@/lib/backpack-service/types";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { z } from "zod";
 
 export const createBackpackAction = authenticatedActionClient
   .schema(backpackSchema.omit({ id: true, created_at: true, userId: true }))
@@ -28,7 +29,7 @@ export const deleteBackpackAction = authenticatedActionClient
   });
 
 export const addItemAction = authenticatedActionClient
-  .schema(backpackItemSchema.omit({ id: true }))
+  .schema(backpackItemSchema.omit({ id: true, order: true }))
   .action(async ({ parsedInput }) => {
     const newItem = await getBackpackService().addItem({
       backpackId: parsedInput.backpackId,
@@ -52,4 +53,21 @@ export const deleteItemAction = authenticatedActionClient
   .schema(backpackItemSchema.pick({ id: true }))
   .action(async ({ parsedInput: { id } }) => {
     await getBackpackService().deleteItem({ itemId: id });
+  });
+
+export const reorderItemsAction = authenticatedActionClient
+  .schema(
+    z.object({
+      backpackId: z.string().uuid(),
+      items: z.array(
+        z.object({
+          id: z.string().uuid(),
+          order: z.number().int().min(0),
+        })
+      ),
+    })
+  )
+  .action(async ({ parsedInput }) => {
+    await getBackpackService().reorderItems({ items: parsedInput.items });
+    revalidatePath(`/dashboard/backpacks/${parsedInput.backpackId}`);
   });

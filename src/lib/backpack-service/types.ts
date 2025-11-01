@@ -11,6 +11,7 @@ export const backpackItemSchema = z.object({
   id: z.string().uuid(),
   backpackId: z.string().uuid(),
   item: z.string().min(1),
+  order: z.number().int().min(0),
 });
 
 export type Backpack = z.infer<typeof backpackSchema>;

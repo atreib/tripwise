@@ -86,4 +86,5 @@ export interface BackpackItemTable {
   id: string;
   backpackId: string;
   item: string;
+  order: number;
 }

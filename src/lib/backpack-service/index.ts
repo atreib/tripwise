@@ -46,17 +46,28 @@ async function getBackpackItems(props: { backpackId: string }) {
     .selectFrom("backpack_item")
     .selectAll()
     .where("backpackId", "=", props.backpackId)
+    .orderBy("order", "asc")
     .execute();
   return backpackItemSchema.array().parse(items);
 }
 
 async function addItem(props: { backpackId: string; item: string }) {
+  // Get the current max order for this backpack
+  const result = await db
+    .selectFrom("backpack_item")
+    .select(({ fn }) => fn.max("order").as("maxOrder"))
+    .where("backpackId", "=", props.backpackId)
+    .executeTakeFirst();
+
+  const nextOrder = result?.maxOrder != null ? result.maxOrder + 1 : 0;
+
   const newItem = await db
     .insertInto("backpack_item")
     .values({
       id: v4(),
       backpackId: props.backpackId,
       item: props.item,
+      order: nextOrder,
     })
     .returningAll()
     .executeTakeFirstOrThrow();
@@ -82,6 +93,21 @@ async function deleteItem(props: { itemId: string }) {
     .execute();
 }
 
+async function reorderItems(props: {
+  items: Array<{ id: string; order: number }>;
+}) {
+  // Update all items in parallel
+  await Promise.all(
+    props.items.map((item) =>
+      db
+        .updateTable("backpack_item")
+        .set({ order: item.order })
+        .where("id", "=", item.id)
+        .execute()
+    )
+  );
+}
+
 export function getBackpackService() {
   return {
     createBackpack,
@@ -92,5 +118,6 @@ export function getBackpackService() {
     addItem,
     updateItem,
     deleteItem,
+    reorderItems,
   };
 }

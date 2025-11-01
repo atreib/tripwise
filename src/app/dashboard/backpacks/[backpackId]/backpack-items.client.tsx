@@ -4,20 +4,153 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PlusIcon, Trash2Icon, PencilIcon, CheckIcon, XIcon } from "lucide-react";
+import {
+  PlusIcon,
+  Trash2Icon,
+  PencilIcon,
+  CheckIcon,
+  XIcon,
+  GripVerticalIcon,
+} from "lucide-react";
 import type { BackpackItem } from "@/lib/backpack-service/types";
-import { addItemAction, updateItemAction, deleteItemAction } from "../actions";
+import {
+  addItemAction,
+  updateItemAction,
+  deleteItemAction,
+  reorderItemsAction,
+} from "../actions";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 type Props = {
   backpackId: string;
   initialItems: BackpackItem[];
 };
 
+type SortableItemProps = {
+  item: BackpackItem;
+  isEditing: boolean;
+  editingText: string;
+  onStartEdit: () => void;
+  onCancelEdit: () => void;
+  onUpdateItem: (id: string, text: string) => void;
+  onDeleteItem: (id: string) => void;
+  onEditTextChange: (text: string) => void;
+};
+
+function SortableItem({
+  item,
+  isEditing,
+  editingText,
+  onStartEdit,
+  onCancelEdit,
+  onUpdateItem,
+  onDeleteItem,
+  onEditTextChange,
+}: SortableItemProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: item.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="flex items-center gap-2 p-2 rounded-md hover:bg-muted/50 transition-colors"
+    >
+      {!isEditing && (
+        <button
+          {...attributes}
+          {...listeners}
+          className="cursor-grab active:cursor-grabbing touch-none"
+        >
+          <GripVerticalIcon className="w-4 h-4 text-muted-foreground" />
+        </button>
+      )}
+
+      {isEditing ? (
+        <>
+          <Input
+            value={editingText}
+            onChange={(e) => onEditTextChange(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                onUpdateItem(item.id, editingText);
+              } else if (e.key === "Escape") {
+                onCancelEdit();
+              }
+            }}
+            className="flex-1"
+            autoFocus
+          />
+          <Button
+            size="icon"
+            variant="ghost"
+            onClick={() => onUpdateItem(item.id, editingText)}
+          >
+            <CheckIcon className="w-4 h-4" />
+          </Button>
+          <Button size="icon" variant="ghost" onClick={onCancelEdit}>
+            <XIcon className="w-4 h-4" />
+          </Button>
+        </>
+      ) : (
+        <>
+          <span className="flex-1">{item.item}</span>
+          <Button size="icon" variant="ghost" onClick={onStartEdit}>
+            <PencilIcon className="w-4 h-4" />
+          </Button>
+          <Button
+            size="icon"
+            variant="ghost"
+            onClick={() => onDeleteItem(item.id)}
+          >
+            <Trash2Icon className="w-4 h-4" />
+          </Button>
+        </>
+      )}
+    </div>
+  );
+}
+
 export function BackpackItems({ backpackId, initialItems }: Props) {
   const [items, setItems] = useState<BackpackItem[]>(initialItems);
   const [newItemText, setNewItemText] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingText, setEditingText] = useState("");
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   async function handleAddItem() {
     const text = newItemText.trim();
@@ -29,6 +162,7 @@ export function BackpackItems({ backpackId, initialItems }: Props) {
       id: tempId,
       backpackId,
       item: text,
+      order: items.length,
     };
     setItems((prev) => [...prev, optimisticItem]);
     setNewItemText("");
@@ -85,6 +219,39 @@ export function BackpackItems({ backpackId, initialItems }: Props) {
     }
   }
 
+  async function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+
+    if (!over || active.id === over.id) {
+      return;
+    }
+
+    const oldItems = items;
+    const oldIndex = items.findIndex((item) => item.id === active.id);
+    const newIndex = items.findIndex((item) => item.id === over.id);
+
+    // Optimistic update
+    const newItems = arrayMove(items, oldIndex, newIndex);
+    const reorderedItems = newItems.map((item, index) => ({
+      ...item,
+      order: index,
+    }));
+    setItems(reorderedItems);
+
+    try {
+      // Save to server
+      const res = await reorderItemsAction({
+        backpackId,
+        items: reorderedItems.map((item) => ({ id: item.id, order: item.order })),
+      });
+      if (res?.serverError) throw new Error(res.serverError);
+    } catch (err) {
+      // Rollback on error
+      setItems(oldItems);
+      console.error("Failed to reorder items:", err);
+    }
+  }
+
   function startEditing(item: BackpackItem) {
     setEditingId(item.id);
     setEditingText(item.item);
@@ -125,64 +292,32 @@ export function BackpackItems({ backpackId, initialItems }: Props) {
               No items yet. Add your first item above!
             </p>
           ) : (
-            <div className="space-y-2">
-              {items.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex items-center gap-2 p-2 rounded-md hover:bg-muted/50 transition-colors"
-                >
-                  {editingId === item.id ? (
-                    <>
-                      <Input
-                        value={editingText}
-                        onChange={(e) => setEditingText(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            handleUpdateItem(item.id, editingText);
-                          } else if (e.key === "Escape") {
-                            cancelEditing();
-                          }
-                        }}
-                        className="flex-1"
-                        autoFocus
-                      />
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        onClick={() => handleUpdateItem(item.id, editingText)}
-                      >
-                        <CheckIcon className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        onClick={cancelEditing}
-                      >
-                        <XIcon className="w-4 h-4" />
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <span className="flex-1">{item.item}</span>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        onClick={() => startEditing(item)}
-                      >
-                        <PencilIcon className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        onClick={() => handleDeleteItem(item.id)}
-                      >
-                        <Trash2Icon className="w-4 h-4" />
-                      </Button>
-                    </>
-                  )}
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext
+                items={items.map((item) => item.id)}
+                strategy={verticalListSortingStrategy}
+              >
+                <div className="space-y-2">
+                  {items.map((item) => (
+                    <SortableItem
+                      key={item.id}
+                      item={item}
+                      isEditing={editingId === item.id}
+                      editingText={editingText}
+                      onStartEdit={() => startEditing(item)}
+                      onCancelEdit={cancelEditing}
+                      onUpdateItem={handleUpdateItem}
+                      onDeleteItem={handleDeleteItem}
+                      onEditTextChange={setEditingText}
+                    />
+                  ))}
                 </div>
-              ))}
-            </div>
+              </SortableContext>
+            </DndContext>
           )}
         </div>
       </CardContent>
